@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 // Créer l'utilisateur
                 $hashed_password = hash_password($password);
-                $stmt = $db->prepare("INSERT INTO users (first_name, last_name, email, phone, password, role, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())");
+                $stmt = $db->prepare("INSERT INTO users (first_name, last_name, email, phone, password_hash, role, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())");
                 $stmt->execute([$first_name, $last_name, $email, $phone, $hashed_password, $role]);
                 
                 // Logger l'activité
@@ -109,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 if ($user_id_to_reset > 0 && !empty($new_password)) {
                     $hashed_password = hash_password($new_password);
-                    $stmt = $db->prepare("UPDATE users SET password = ? WHERE id = ?");
+                    $stmt = $db->prepare("UPDATE users SET password_hash = ? WHERE id = ?");
                     $stmt->execute([$hashed_password, $user_id_to_reset]);
                     
                     // Logger l'activité
@@ -167,7 +167,7 @@ try {
     $stmt = $db->prepare("
         SELECT u.*, 
                (SELECT COUNT(*) FROM posts WHERE client_id = u.id) as post_count,
-               (SELECT COUNT(*) FROM subscriptions WHERE user_id = u.id) as subscription_count
+               (SELECT COUNT(*) FROM subscriptions WHERE client_id = u.id) as subscription_count
         FROM users u 
         WHERE $where_clause
         ORDER BY u.created_at DESC

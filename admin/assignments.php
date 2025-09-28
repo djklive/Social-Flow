@@ -34,8 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                     
                     // Créer l'assignation
-                    $stmt = $db->prepare("INSERT INTO client_assignments (client_id, community_manager_id, assigned_by, assigned_at, status) VALUES (?, ?, ?, NOW(), 'active')");
-                    $stmt->execute([$client_id, $community_manager_id, $user_id]);
+                    $stmt = $db->prepare("INSERT INTO client_assignments (client_id, community_manager_id, assigned_at, status) VALUES (?, ?, NOW(), 'active')");
+                    $stmt->execute([$client_id, $community_manager_id]);
                     
                     // Logger l'activité
                     log_activity($user_id, 'assignment_created', "Assignation créée: Client $client_id -> CM $community_manager_id");
@@ -124,12 +124,10 @@ try {
         SELECT ca.*, 
                c.first_name as client_first_name, c.last_name as client_last_name, c.email as client_email,
                cm.first_name as cm_first_name, cm.last_name as cm_last_name, cm.email as cm_email,
-               admin.first_name as assigned_by_first_name, admin.last_name as assigned_by_last_name,
                (SELECT COUNT(*) FROM posts WHERE client_id = ca.client_id AND community_manager_id = ca.community_manager_id) as post_count
         FROM client_assignments ca
         INNER JOIN users c ON ca.client_id = c.id
         INNER JOIN users cm ON ca.community_manager_id = cm.id
-        LEFT JOIN users admin ON ca.assigned_by = admin.id
         WHERE $where_clause
         ORDER BY ca.assigned_at DESC
     ");
@@ -486,7 +484,7 @@ try {
                                             <?php echo $assignment['post_count']; ?>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            <?php echo htmlspecialchars($assignment['assigned_by_first_name'] . ' ' . $assignment['assigned_by_last_name']); ?>
+                                            Système
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                             <?php echo format_date_fr($assignment['assigned_at'], 'd/m/Y H:i'); ?>

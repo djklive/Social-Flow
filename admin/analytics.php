@@ -126,7 +126,7 @@ try {
             s.price
         FROM users u
         LEFT JOIN posts p ON u.id = p.client_id
-        LEFT JOIN subscriptions s ON u.id = s.user_id AND s.status = 'active'
+        LEFT JOIN subscriptions s ON u.id = s.client_id AND s.status = 'active'
         WHERE u.role = 'client'
         GROUP BY u.id, u.first_name, u.last_name, u.email, s.plan_type, s.price
         ORDER BY post_count DESC

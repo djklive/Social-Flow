@@ -111,8 +111,8 @@ try {
                u.first_name, u.last_name, u.email,
                s.plan_type, s.price as subscription_price
         FROM payments p
-        INNER JOIN users u ON p.user_id = u.id
-        LEFT JOIN subscriptions s ON p.subscription_id = s.id
+        INNER JOIN subscriptions s ON p.subscription_id = s.id
+        INNER JOIN users u ON s.client_id = u.id
         WHERE $where_clause
         ORDER BY p.created_at DESC
     ");

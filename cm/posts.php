@@ -27,9 +27,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $client_id = (int)($_POST['client_id'] ?? 0);
                 $platforms = $_POST['platforms'] ?? [];
                 $scheduled_at = $_POST['scheduled_at'] ?? null;
-                $status = sanitize_input($_POST['status'] ?? 'draft');
+                $status = sanitize_input($_POST['status'] ?? '');
                 
-                if (empty($title) || empty($content) || $client_id <= 0) {
+                // Validation spécifique pour la création
+                if ($action === 'create' && empty($status)) {
+                    $error_message = 'Veuillez sélectionner un statut de publication.';
+                } elseif ($status === 'scheduled' && empty($scheduled_at)) {
+                    $error_message = 'Veuillez sélectionner une date de programmation pour les publications programmées.';
+                } elseif (empty($title) || empty($content) || $client_id <= 0) {
                     $error_message = 'Veuillez remplir tous les champs obligatoires.';
                 } else {
                     $platforms_json = json_encode($platforms);
@@ -355,6 +360,9 @@ try {
                                 </select>
                             </div>
                             
+                            <?php if ($action === 'create'): ?>
+                            <input type="hidden" id="selected-status" name="status" value="">
+                            <?php else: ?>
                             <div>
                                 <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Statut</label>
                                 <select id="status" name="status"
@@ -364,6 +372,7 @@ try {
                                     <option value="published" <?php echo (isset($post_to_edit['status']) && $post_to_edit['status'] === 'published') ? 'selected' : ''; ?>>Publié</option>
                                 </select>
                             </div>
+                            <?php endif; ?>
                             
                             <div>
                                 <label for="scheduled_at" class="block text-sm font-medium text-gray-700 mb-2">Date de publication</label>
@@ -401,10 +410,17 @@ try {
                             <a href="posts.php" class="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700 transition duration-300">
                                 Annuler
                             </a>
+                            <?php if ($action === 'create'): ?>
+                            <button type="button" id="publish-btn" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition duration-300">
+                                <i class="fas fa-paper-plane mr-2"></i>
+                                Publier
+                            </button>
+                            <?php else: ?>
                             <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition duration-300">
                                 <i class="fas fa-save mr-2"></i>
-                                <?php echo $action === 'create' ? 'Créer' : 'Mettre à jour'; ?>
+                                Mettre à jour
                             </button>
+                            <?php endif; ?>
                         </div>
                     </form>
                 </div>
@@ -612,6 +628,50 @@ try {
         </main>
     </div>
 
+    <!-- Modal de sélection du statut -->
+    <div id="status-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3">
+                <div class="flex items-center justify-center w-12 h-12 mx-auto bg-green-100 rounded-full mb-4">
+                    <i class="fas fa-paper-plane text-green-600 text-xl"></i>
+                </div>
+                <h3 class="text-lg font-medium text-gray-900 text-center mb-6">Choisir le statut de publication</h3>
+                
+                <div class="space-y-3">
+                    <button type="button" id="modal-btn-draft" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-4 rounded-lg border-2 border-gray-300 hover:border-gray-400 transition duration-300 flex items-center justify-center">
+                        <i class="fas fa-edit mr-3 text-lg"></i>
+                        <div class="text-left">
+                            <div class="font-semibold text-base">Brouillon</div>
+                            <div class="text-sm text-gray-500">Sauvegarder comme brouillon</div>
+                        </div>
+                    </button>
+                    
+                    <button type="button" id="modal-btn-scheduled" class="w-full bg-yellow-100 hover:bg-yellow-200 text-yellow-700 px-6 py-4 rounded-lg border-2 border-yellow-300 hover:border-yellow-400 transition duration-300 flex items-center justify-center">
+                        <i class="fas fa-calendar-alt mr-3 text-lg"></i>
+                        <div class="text-left">
+                            <div class="font-semibold text-base">Programmé</div>
+                            <div class="text-sm text-yellow-600">Programmer la publication</div>
+                        </div>
+                    </button>
+                    
+                    <button type="button" id="modal-btn-published" class="w-full bg-green-100 hover:bg-green-200 text-green-700 px-6 py-4 rounded-lg border-2 border-green-300 hover:border-green-400 transition duration-300 flex items-center justify-center">
+                        <i class="fas fa-paper-plane mr-3 text-lg"></i>
+                        <div class="text-left">
+                            <div class="font-semibold text-base">Publié immédiatement</div>
+                            <div class="text-sm text-green-600">Publier maintenant</div>
+                        </div>
+                    </button>
+                </div>
+                
+                <div class="flex justify-center mt-6">
+                    <button type="button" id="close-modal" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition duration-300">
+                        Annuler
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Auto-hide flash messages
         setTimeout(function() {
@@ -624,6 +684,84 @@ try {
                 }, 500);
             });
         }, 5000);
+
+        // Gestion du modal de sélection du statut
+        document.addEventListener('DOMContentLoaded', function() {
+            const publishBtn = document.getElementById('publish-btn');
+            const modal = document.getElementById('status-modal');
+            const closeModalBtn = document.getElementById('close-modal');
+            const selectedStatusInput = document.getElementById('selected-status');
+            const form = document.querySelector('form');
+            
+            // Boutons du modal
+            const modalDraftBtn = document.getElementById('modal-btn-draft');
+            const modalScheduledBtn = document.getElementById('modal-btn-scheduled');
+            const modalPublishedBtn = document.getElementById('modal-btn-published');
+            
+            if (publishBtn && modal && selectedStatusInput && form) {
+                // Ouvrir le modal quand on clique sur "Publier"
+                publishBtn.addEventListener('click', function() {
+                    modal.classList.remove('hidden');
+                });
+                
+                // Fermer le modal
+                function closeModal() {
+                    modal.classList.add('hidden');
+                }
+                
+                closeModalBtn.addEventListener('click', closeModal);
+                
+                // Fermer le modal en cliquant à l'extérieur
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        closeModal();
+                    }
+                });
+                
+                // Fermer le modal avec la touche Escape
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                        closeModal();
+                    }
+                });
+                
+                // Gestion des sélections dans le modal
+                function handleStatusSelection(status, buttonText, buttonClass) {
+                    selectedStatusInput.value = status;
+                    
+                    // Mettre à jour le bouton "Publier"
+                    publishBtn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>' + buttonText;
+                    publishBtn.className = buttonClass + ' text-white px-6 py-2 rounded-lg transition duration-300';
+                    
+                    // Fermer le modal
+                    closeModal();
+                    
+                    // Soumettre le formulaire
+                    form.submit();
+                }
+                
+                // Événements pour les boutons du modal
+                modalDraftBtn.addEventListener('click', function() {
+                    handleStatusSelection('draft', 'Créer comme brouillon', 'bg-gray-600 hover:bg-gray-700');
+                });
+                
+                modalScheduledBtn.addEventListener('click', function() {
+                    // Vérifier si une date est sélectionnée
+                    const scheduledAtInput = document.getElementById('scheduled_at');
+                    if (!scheduledAtInput.value) {
+                        alert('Veuillez sélectionner une date de programmation avant de continuer.');
+                        closeModal();
+                        scheduledAtInput.focus();
+                        return;
+                    }
+                    handleStatusSelection('scheduled', 'Programmer la publication', 'bg-yellow-600 hover:bg-yellow-700');
+                });
+                
+                modalPublishedBtn.addEventListener('click', function() {
+                    handleStatusSelection('published', 'Publier immédiatement', 'bg-green-600 hover:bg-green-700');
+                });
+            }
+        });
     </script>
 </body>
 </html>

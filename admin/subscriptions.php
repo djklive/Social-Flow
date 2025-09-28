@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 if ($client_id > 0 && !empty($plan_type) && $price > 0 && !empty($start_date) && !empty($end_date)) {
                     // Vérifier si l'utilisateur a déjà un abonnement actif
-                    $stmt = $db->prepare("SELECT id FROM subscriptions WHERE user_id = ? AND status = 'active'");
+                    $stmt = $db->prepare("SELECT id FROM subscriptions WHERE client_id = ? AND status = 'active'");
                     $stmt->execute([$client_id]);
                     if ($stmt->fetch()) {
                         $error_message = 'Cet utilisateur a déjà un abonnement actif.';
@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                     
                     // Créer l'abonnement
-                    $stmt = $db->prepare("INSERT INTO subscriptions (user_id, plan_type, price, start_date, end_date, status, created_at) VALUES (?, ?, ?, ?, ?, 'active', NOW())");
+                    $stmt = $db->prepare("INSERT INTO subscriptions (client_id, plan_type, price, start_date, end_date, status, created_at) VALUES (?, ?, ?, ?, ?, 'active', NOW())");
                     $stmt->execute([$client_id, $plan_type, $price, $start_date, $end_date]);
                     
                     // Logger l'activité
@@ -145,7 +145,7 @@ try {
                (SELECT COUNT(*) FROM payments WHERE subscription_id = s.id) as payment_count,
                (SELECT SUM(amount) FROM payments WHERE subscription_id = s.id AND status = 'completed') as total_paid
         FROM subscriptions s
-        INNER JOIN users u ON s.user_id = u.id
+        INNER JOIN users u ON s.client_id = u.id
         WHERE $where_clause
         ORDER BY s.created_at DESC
     ");
@@ -156,7 +156,7 @@ try {
     $stmt = $db->prepare("
         SELECT u.* FROM users u 
         WHERE u.role = 'client' AND u.status = 'active'
-        AND u.id NOT IN (SELECT user_id FROM subscriptions WHERE status = 'active')
+        AND u.id NOT IN (SELECT client_id FROM subscriptions WHERE status = 'active')
         ORDER BY u.first_name, u.last_name
     ");
     $stmt->execute();
