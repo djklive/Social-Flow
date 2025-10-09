@@ -466,6 +466,7 @@ try {
                                 Annuler
                             </a>
                             <?php if ($action === 'create'): ?>
+<<<<<<< HEAD
                             <button type="button" id="publish-btn" class="bg-green-600 text-white px-4 py-1.5 text-sm rounded-lg hover:bg-green-700 transition duration-300">
                                 <i class="fas fa-paper-plane mr-1"></i>
                                 Publier
@@ -475,6 +476,17 @@ try {
                                 <i class="fas fa-save mr-1"></i>
                                 Mettre à jour
                             </button>
+=======
+                            <button type="button" id="publish-btn" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition duration-300">
+                                <i class="fas fa-paper-plane mr-2"></i>
+                                Publier
+                            </button>
+                            <?php else: ?>
+                            <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition duration-300">
+                                <i class="fas fa-save mr-2"></i>
+                                Mettre à jour
+                            </button>
+>>>>>>> 1d200c683625b15a36efea56ea544c54e79cdde8
                             <?php endif; ?>
                         </div>
                     </form>
@@ -851,6 +863,7 @@ try {
                     handleStatusSelection('published', 'Publier immédiatement', 'bg-green-600 hover:bg-green-700');
                 });
             }
+<<<<<<< HEAD
             
             // Gestion du drag & drop pour les médias
             const dropzone = document.getElementById('media-dropzone');
@@ -975,6 +988,8 @@ try {
                     }
                 };
             }
+=======
+>>>>>>> 1d200c683625b15a36efea56ea544c54e79cdde8
         });
     </script>
 </body>
