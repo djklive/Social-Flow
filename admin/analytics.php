@@ -126,7 +126,7 @@ try {
             s.price
         FROM users u
         LEFT JOIN posts p ON u.id = p.client_id
-        LEFT JOIN subscriptions s ON u.id = s.user_id AND s.status = 'active'
+        LEFT JOIN subscriptions s ON u.id = s.client_id AND s.status = 'active'
         WHERE u.role = 'client'
         GROUP BY u.id, u.first_name, u.last_name, u.email, s.plan_type, s.price
         ORDER BY post_count DESC
@@ -205,7 +205,7 @@ try {
 <body class="bg-gray-50">
     <!-- Sidebar -->
     <div class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg sidebar-transition" id="sidebar">
-        <div class="flex items-center justify-center h-16 bg-gradient-to-r from-orange-600 to-red-600">
+        <div class="flex items-center justify-center h-16 bg-gradient-to-r from-purple-600 to-pink-600">
             <i class="fas fa-share-alt text-white text-2xl mr-3"></i>
             <h1 class="text-white text-xl font-bold">SocialFlow</h1>
         </div>
@@ -213,7 +213,7 @@ try {
         <nav class="mt-8">
             <div class="px-4 mb-4">
                 <div class="flex items-center">
-                    <div class="w-10 h-10 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center">
+                    <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
                         <span class="text-white font-semibold"><?php echo $admin ? strtoupper(substr($admin['first_name'], 0, 1)) : 'A'; ?></span>
                     </div>
                     <div class="ml-3">
@@ -248,8 +248,8 @@ try {
                     <i class="fas fa-money-bill-wave mr-3"></i>
                     Paiements
                 </a>
-                <a href="analytics.php" class="flex items-center px-4 py-2 text-sm font-medium text-white bg-orange-100 rounded-lg">
-                    <i class="fas fa-chart-bar mr-3 text-orange-600"></i>
+                <a href="analytics.php" class="flex items-center px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-purple-100 to-pink-100 rounded-lg">
+                    <i class="fas fa-chart-bar mr-3 text-purple-600"></i>
                     Analytics
                 </a>
                 <a href="settings.php" class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg">
@@ -295,7 +295,7 @@ try {
             <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
                 <form method="GET" class="flex flex-wrap items-center gap-4">
                     <div>
-                        <select name="date_range" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                        <select name="date_range" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             <option value="7_days" <?php echo $date_range === '7_days' ? 'selected' : ''; ?>>7 derniers jours</option>
                             <option value="30_days" <?php echo $date_range === '30_days' ? 'selected' : ''; ?>>30 derniers jours</option>
                             <option value="90_days" <?php echo $date_range === '90_days' ? 'selected' : ''; ?>>90 derniers jours</option>
@@ -304,14 +304,14 @@ try {
                     </div>
                     
                     <div>
-                        <select name="period" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                        <select name="period" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             <option value="daily" <?php echo $period === 'daily' ? 'selected' : ''; ?>>Quotidien</option>
                             <option value="weekly" <?php echo $period === 'weekly' ? 'selected' : ''; ?>>Hebdomadaire</option>
                             <option value="monthly" <?php echo $period === 'monthly' ? 'selected' : ''; ?>>Mensuel</option>
                         </select>
                     </div>
                     
-                    <button type="submit" class="bg-orange-600 text-white px-6 py-2 rounded-lg hover:bg-orange-700 transition duration-300">
+                    <button type="submit" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300">
                         <i class="fas fa-filter mr-2"></i>Appliquer
                     </button>
                 </form>
@@ -357,8 +357,8 @@ try {
                 
                 <div class="bg-white rounded-lg shadow-sm p-6 card-hover">
                     <div class="flex items-center">
-                        <div class="p-3 rounded-full bg-orange-100">
-                            <i class="fas fa-credit-card text-orange-600 text-xl"></i>
+                        <div class="p-3 rounded-full bg-gradient-to-r from-purple-100 to-pink-100">
+                            <i class="fas fa-credit-card text-purple-600 text-xl"></i>
                         </div>
                         <div class="ml-4">
                             <p class="text-sm font-medium text-gray-600">Abonnements Actifs</p>
@@ -393,8 +393,8 @@ try {
                 
                 <div class="bg-white rounded-lg shadow-sm p-6 card-hover">
                     <div class="flex items-center">
-                        <div class="p-3 rounded-full bg-yellow-100">
-                            <i class="fas fa-user-friends text-yellow-600 text-xl"></i>
+                        <div class="p-3 rounded-full bg-gradient-to-r from-blue-100 to-cyan-100">
+                            <i class="fas fa-user-friends text-blue-600 text-xl"></i>
                         </div>
                         <div class="ml-4">
                             <p class="text-sm font-medium text-gray-600">Assignations Actives</p>
@@ -441,7 +441,7 @@ try {
                             <?php foreach ($top_cms as $index => $cm): ?>
                                 <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
                                     <div class="flex items-center">
-                                        <span class="w-8 h-8 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center text-sm font-semibold mr-3">
+                                        <span class="w-8 h-8 bg-gradient-to-r from-purple-100 to-pink-100 text-purple-600 rounded-full flex items-center justify-center text-sm font-semibold mr-3">
                                             <?php echo $index + 1; ?>
                                         </span>
                                         <div>

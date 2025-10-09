@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="SocialFlow\Tests\Integration\DatabaseIntegrationTest" file="C:\xampp\htdocs\Social Flow\Social-Flow\tests\integration\DatabaseIntegrationTest.php" tests="5" assertions="32" errors="0" warnings="0" failures="0" skipped="0" time="1.508572">
+    <testcase name="testDatabaseConnection" class="SocialFlow\Tests\Integration\DatabaseIntegrationTest" classname="SocialFlow.Tests.Integration.DatabaseIntegrationTest" file="C:\xampp\htdocs\Social Flow\Social-Flow\tests\integration\DatabaseIntegrationTest.php" line="35" assertions="4" time="0.014269"/>
+    <testcase name="testUserCreation" class="SocialFlow\Tests\Integration\DatabaseIntegrationTest" classname="SocialFlow.Tests.Integration.DatabaseIntegrationTest" file="C:\xampp\htdocs\Social Flow\Social-Flow\tests\integration\DatabaseIntegrationTest.php" line="48" assertions="12" time="0.204607"/>
+    <testcase name="testUserAuthentication" class="SocialFlow\Tests\Integration\DatabaseIntegrationTest" classname="SocialFlow.Tests.Integration.DatabaseIntegrationTest" file="C:\xampp\htdocs\Social Flow\Social-Flow\tests\integration\DatabaseIntegrationTest.php" line="103" assertions="6" time="0.183621"/>
+    <testcase name="testEmailUniquenessConstraint" class="SocialFlow\Tests\Integration\DatabaseIntegrationTest" classname="SocialFlow.Tests.Integration.DatabaseIntegrationTest" file="C:\xampp\htdocs\Social Flow\Social-Flow\tests\integration\DatabaseIntegrationTest.php" line="144" assertions="3" time="0.112337"/>
+    <testcase name="testRoleValidation" class="SocialFlow\Tests\Integration\DatabaseIntegrationTest" classname="SocialFlow.Tests.Integration.DatabaseIntegrationTest" file="C:\xampp\htdocs\Social Flow\Social-Flow\tests\integration\DatabaseIntegrationTest.php" line="172" assertions="7" time="0.993737"/>
+  </testsuite>
+</testsuites>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd"
+         bootstrap="tests/bootstrap.php"
+         colors="true"
+         processIsolation="false"
+         stopOnFailure="false"
+         cacheResultFile=".phpunit.result.cache">
+    
+    <testsuites>
+        <testsuite name="Tests Unitaires">
+            <directory>tests/unit</directory>
+        </testsuite>
+        <testsuite name="Tests d'Intégration">
+            <directory>tests/integration</directory>
+        </testsuite>
+        <testsuite name="Tests Fonctionnels">
+            <directory>tests/functional</directory>
+        </testsuite>
+        <testsuite name="Tous les Tests">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+    
+    <coverage processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">includes</directory>
+            <directory suffix=".php">config</directory>
+            <directory suffix=".php">admin</directory>
+            <directory suffix=".php">client</directory>
+            <directory suffix=".php">cm</directory>
+            <directory suffix=".php">auth</directory>
+        </include>
+        <exclude>
+            <directory>tests</directory>
+            <directory>database</directory>
+            <file>index.php</file>
+        </exclude>
+        <report>
+            <html outputDirectory="tests/coverage"/>
+            <text outputFile="tests/coverage.txt"/>
+        </report>
+    </coverage>
+    
+    <logging>
+        <junit outputFile="tests/results/junit.xml"/>
+        <testdoxHtml outputFile="tests/results/testdox.html"/>
+        <testdoxText outputFile="tests/results/testdox.txt"/>
+    </logging>
+    
+    <php>
+        <ini name="error_reporting" value="-1"/>
+        <ini name="memory_limit" value="-1"/>
+        <ini name="display_errors" value="1"/>
+        <ini name="display_startup_errors" value="1"/>
+        <env name="APP_ENV" value="testing"/>
+        <env name="DB_HOST" value="localhost"/>
+        <env name="DB_NAME" value="socialflow_test"/>
+        <env name="DB_USER" value="root"/>
+        <env name="DB_PASS" value=""/>
+    </php>
+</phpunit>

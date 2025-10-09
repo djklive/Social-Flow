@@ -84,6 +84,26 @@ try {
     $stmt->execute();
     $recent_activity = $stmt->fetchAll();
     
+    // Fonction pour traduire les actions en français
+    function translate_action($action) {
+        $translations = [
+            'login' => 'Connexion',
+            'account_created' => 'Compte créé',
+            'subscription_created' => 'Abonnement créé',
+            'assignment_created' => 'Assignation créée',
+            'user_created' => 'Utilisateur créé',
+            'post_created' => 'Publication créée',
+            'failed_login_attempt' => 'Tentative de connexion échouée',
+            'user_login' => 'Connexion utilisateur',
+            'logout' => 'Déconnexion',
+            'profile_updated' => 'Profil mis à jour',
+            'password_changed' => 'Mot de passe modifié',
+            'settings_updated' => 'Paramètres mis à jour'
+        ];
+        
+        return $translations[$action] ?? ucfirst(str_replace('_', ' ', $action));
+    }
+    
     // Notifications non lues
     $stmt = $db->prepare("SELECT COUNT(*) as unread_count FROM notifications WHERE user_id = ? AND is_read = FALSE");
     $stmt->execute([$user_id]);
@@ -119,12 +139,58 @@ try {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
         }
+        .stats-card {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border: 1px solid #93c5fd;
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+        .stats-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
+            border-color: #cbd5e0;
+        }
+        .stats-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            line-height: 1;
+            margin-top: 8px;
+        }
+        .stats-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #64748b;
+            margin-top: 4px;
+        }
+        .section-card {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid #93c5fd;
+        }
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color:rgb(113, 129, 173);
+            margin-bottom: 24px;
+        }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-blue-50">
     <!-- Sidebar -->
-    <div class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg sidebar-transition" id="sidebar">
-        <div class="flex items-center justify-center h-16 bg-gradient-to-r from-red-600 to-purple-600">
+    <div class="fixed inset-y-0 left-0 z-50 w-64 bg-blue-100 shadow-lg sidebar-transition" id="sidebar">
+        <div class="flex items-center justify-center h-16 bg-gradient-to-r from-blue-500 to-blue-600">
             <i class="fas fa-share-alt text-white text-2xl mr-3"></i>
             <h1 class="text-white text-xl font-bold">SocialFlow</h1>
         </div>
@@ -132,55 +198,55 @@ try {
         <nav class="mt-8">
             <div class="px-4 mb-4">
                 <div class="flex items-center">
-                    <div class="w-10 h-10 bg-gradient-to-r from-red-500 to-purple-500 rounded-full flex items-center justify-center">
+                    <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
                         <span class="text-white font-semibold"><?php echo strtoupper(substr($admin['first_name'], 0, 1)); ?></span>
                     </div>
                     <div class="ml-3">
-                        <p class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($admin['first_name'] . ' ' . $admin['last_name']); ?></p>
-                        <p class="text-xs text-gray-500">Administrateur</p>
+                        <p class="text-sm font-medium text-blue-900"><?php echo htmlspecialchars($admin['first_name'] . ' ' . $admin['last_name']); ?></p>
+                        <p class="text-xs text-blue-700">Administrateur</p>
                     </div>
                 </div>
             </div>
             
             <div class="px-4 space-y-2">
-                <a href="dashboard.php" class="flex items-center px-4 py-2 text-sm font-medium text-white bg-red-100 rounded-lg">
-                    <i class="fas fa-tachometer-alt mr-3 text-red-600"></i>
+                <a href="dashboard.php" class="flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-200 rounded-lg">
+                    <i class="fas fa-tachometer-alt mr-3 text-blue-800"></i>
                     Dashboard
                 </a>
-                <a href="users.php" class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg">
+                <a href="users.php" class="flex items-center px-4 py-2 text-sm font-medium text-blue-800 hover:bg-blue-200 rounded-lg">
                     <i class="fas fa-users mr-3"></i>
                     Utilisateurs
                 </a>
-                <a href="assignments.php" class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg">
+                <a href="assignments.php" class="flex items-center px-4 py-2 text-sm font-medium text-blue-800 hover:bg-blue-200 rounded-lg">
                     <i class="fas fa-link mr-3"></i>
                     Assignations
                 </a>
-                <a href="posts.php" class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg">
+                <a href="posts.php" class="flex items-center px-4 py-2 text-sm font-medium text-blue-800 hover:bg-blue-200 rounded-lg">
                     <i class="fas fa-newspaper mr-3"></i>
                     Publications
                 </a>
-                <a href="subscriptions.php" class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg">
+                <a href="subscriptions.php" class="flex items-center px-4 py-2 text-sm font-medium text-blue-800 hover:bg-blue-200 rounded-lg">
                     <i class="fas fa-credit-card mr-3"></i>
                     Abonnements
                 </a>
-                <a href="payments.php" class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg">
+                <a href="payments.php" class="flex items-center px-4 py-2 text-sm font-medium text-blue-800 hover:bg-blue-200 rounded-lg">
                     <i class="fas fa-money-bill-wave mr-3"></i>
                     Paiements
                 </a>
-                <a href="analytics.php" class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg">
+                <a href="analytics.php" class="flex items-center px-4 py-2 text-sm font-medium text-blue-800 hover:bg-blue-200 rounded-lg">
                     <i class="fas fa-chart-bar mr-3"></i>
                     Analytics
                 </a>
-                <a href="notifications.php" class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg relative">
+                <a href="notifications.php" class="flex items-center px-4 py-2 text-sm font-medium text-blue-800 hover:bg-blue-200 rounded-lg relative">
                     <i class="fas fa-bell mr-3"></i>
                     Notifications
                     <?php if ($unread_notifications > 0): ?>
-                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                        <span class="absolute -top-1 -right-1 bg-blue-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                             <?php echo $unread_notifications; ?>
                         </span>
                     <?php endif; ?>
                 </a>
-                <a href="settings.php" class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg">
+                <a href="settings.php" class="flex items-center px-4 py-2 text-sm font-medium text-blue-800 hover:bg-blue-200 rounded-lg">
                     <i class="fas fa-cog mr-3"></i>
                     Paramètres
                 </a>
@@ -188,7 +254,7 @@ try {
         </nav>
         
         <div class="absolute bottom-0 w-full p-4">
-            <a href="../auth/logout.php" class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg">
+            <a href="../auth/logout.php" class="flex items-center px-4 py-2 text-sm font-medium text-blue-800 hover:bg-blue-200 rounded-lg">
                 <i class="fas fa-sign-out-alt mr-3"></i>
                 Déconnexion
             </a>
@@ -198,20 +264,20 @@ try {
     <!-- Main Content -->
     <div class="ml-64">
         <!-- Top Navigation -->
-        <header class="bg-white shadow-sm border-b border-gray-200">
+        <header class="bg-blue-200 shadow-sm border-b border-blue-300">
             <div class="flex items-center justify-between px-6 py-4">
                 <div>
-                    <h1 class="text-2xl font-semibold text-gray-900">Dashboard Administrateur</h1>
-                    <p class="text-sm text-gray-600">Vue d'ensemble du système</p>
+                    <h1 class="text-2xl font-semibold text-blue-900">Dashboard Administrateur</h1>
+                    <p class="text-sm text-blue-700">Vue d'ensemble du système</p>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <button class="p-2 text-gray-400 hover:text-gray-600">
+                    <button class="p-2 text-blue-600 hover:text-blue-800">
                         <i class="fas fa-search text-lg"></i>
                     </button>
-                    <button class="p-2 text-gray-400 hover:text-gray-600 relative">
+                    <button class="p-2 text-blue-600 hover:text-blue-800 relative">
                         <i class="fas fa-bell text-lg"></i>
                         <?php if ($unread_notifications > 0): ?>
-                            <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                            <span class="absolute -top-1 -right-1 bg-blue-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
                                 <?php echo $unread_notifications; ?>
                             </span>
                         <?php endif; ?>
@@ -225,86 +291,70 @@ try {
             <?php display_flash_message(); ?>
             
             <!-- Stats Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <div class="bg-white rounded-lg shadow-sm p-6 card-hover">
-                    <div class="flex items-center">
-                        <div class="p-3 rounded-full bg-blue-100">
-                            <i class="fas fa-users text-blue-600 text-xl"></i>
-                        </div>
-                        <div class="ml-4">
-                            <p class="text-sm font-medium text-gray-600">Total Clients</p>
-                            <p class="text-2xl font-semibold text-gray-900"><?php echo $stats['clients'] ?? 0; ?></p>
-                        </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+                <div class="stats-card">
+                    <div class="stats-icon bg-gradient-to-br from-blue-500 to-blue-600 text-white">
+                        <i class="fas fa-users"></i>
                     </div>
+                    <div class="stats-number text-blue-600"><?php echo $stats['client'] ?? 0; ?></div>
+                    <div class="stats-label">Total Clients</div>
                 </div>
                 
-                <div class="bg-white rounded-lg shadow-sm p-6 card-hover">
-                    <div class="flex items-center">
-                        <div class="p-3 rounded-full bg-green-100">
-                            <i class="fas fa-user-tie text-green-600 text-xl"></i>
-                        </div>
-                        <div class="ml-4">
-                            <p class="text-sm font-medium text-gray-600">Community Managers</p>
-                            <p class="text-2xl font-semibold text-gray-900"><?php echo $stats['community_manager'] ?? 0; ?></p>
-                        </div>
+                <div class="stats-card">
+                    <div class="stats-icon bg-gradient-to-br from-emerald-500 to-emerald-600 text-white">
+                        <i class="fas fa-user-tie"></i>
                     </div>
+                    <div class="stats-number text-emerald-600"><?php echo $stats['community_manager'] ?? 0; ?></div>
+                    <div class="stats-label">Community Managers</div>
                 </div>
                 
-                <div class="bg-white rounded-lg shadow-sm p-6 card-hover">
-                    <div class="flex items-center">
-                        <div class="p-3 rounded-full bg-purple-100">
-                            <i class="fas fa-newspaper text-purple-600 text-xl"></i>
-                        </div>
-                        <div class="ml-4">
-                            <p class="text-sm font-medium text-gray-600">Total Publications</p>
-                            <p class="text-2xl font-semibold text-gray-900"><?php echo $stats['total_posts'] ?? 0; ?></p>
-                        </div>
+                <div class="stats-card">
+                    <div class="stats-icon bg-gradient-to-br from-purple-500 to-purple-600 text-white">
+                        <i class="fas fa-newspaper"></i>
                     </div>
+                    <div class="stats-number text-purple-600"><?php echo $stats['total_posts'] ?? 0; ?></div>
+                    <div class="stats-label">Total Publications</div>
                 </div>
                 
-                <div class="bg-white rounded-lg shadow-sm p-6 card-hover">
-                    <div class="flex items-center">
-                        <div class="p-3 rounded-full bg-yellow-100">
-                            <i class="fas fa-euro-sign text-yellow-600 text-xl"></i>
-                        </div>
-                        <div class="ml-4">
-                            <p class="text-sm font-medium text-gray-600">Revenus Totaux</p>
-                            <p class="text-2xl font-semibold text-gray-900"><?php echo number_format($stats['total_revenue'] ?? 0, 2); ?> €</p>
-                        </div>
+                <div class="stats-card">
+                    <div class="stats-icon bg-gradient-to-br from-amber-500 to-orange-500 text-white">
+                        <i class="fas fa-money-bill-wave"></i>
                     </div>
+                    <div class="stats-number text-amber-600"><?php echo number_format($stats['total_revenue'] ?? 0); ?></div>
+                    <div class="stats-label">Revenus Totaux (FCFA)</div>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <!-- Utilisateurs récents -->
                 <div class="lg:col-span-1">
-                    <div class="bg-white rounded-lg shadow-sm p-6">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-lg font-semibold text-gray-900">Utilisateurs récents</h3>
-                            <a href="users.php" class="text-red-600 hover:text-red-700 text-sm font-medium">
-                                Voir tout <i class="fas fa-arrow-right ml-1"></i>
+                    <div class="section-card">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="section-title">Utilisateurs récents</h3>
+                            <a href="users.php" class="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center">
+                                Voir tout <i class="fas fa-arrow-right ml-2"></i>
                             </a>
                         </div>
                         
                         <?php if (!empty($recent_users)): ?>
-                            <div class="space-y-3">
-                                <?php foreach ($recent_users as $user): ?>
-                                    <div class="flex items-center p-3 bg-gray-50 rounded-lg">
-                                        <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
-                                            <span class="text-white font-semibold text-sm">
+                            <div class="space-y-4">
+                                <?php foreach (array_slice($recent_users, 0, 5) as $user): ?>
+                                    <div class="flex items-center p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl border border-gray-200">
+                                        <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg">
+                                            <span class="text-white font-bold text-sm">
                                                 <?php echo strtoupper(substr($user['first_name'], 0, 1)); ?>
                                             </span>
                                         </div>
-                                        <div class="ml-3 flex-1">
-                                            <p class="font-medium text-gray-900 text-sm">
+                                        <div class="ml-4 flex-1">
+                                            <p class="font-semibold text-gray-900 text-sm">
                                                 <?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?>
                                             </p>
-                                            <p class="text-xs text-gray-500">
+                                            <p class="text-xs text-gray-600 mt-1">
                                                 <?php echo ucfirst($user['role']); ?> • 
                                                 <?php echo time_ago($user['created_at']); ?>
                                             </p>
                                         </div>
-                                        <span class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800">
+                                        <span class="px-3 py-1 text-xs rounded-full bg-blue-100 text-blue-800 font-medium">
                                             <?php echo ucfirst($user['role']); ?>
                                         </span>
                                     </div>
@@ -319,24 +369,34 @@ try {
                     </div>
 
                     <!-- Activité récente -->
-                    <div class="bg-white rounded-lg shadow-sm p-6 mt-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Activité récente</h3>
+                    <div class="section-card mt-8">
+                        <h3 class="section-title">Activité récente</h3>
                         <?php if (!empty($recent_activity)): ?>
-                            <div class="space-y-3">
-                                <?php foreach (array_slice($recent_activity, 0, 8) as $activity): ?>
-                                    <div class="flex items-start">
-                                        <div class="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3"></div>
+                            <div class="space-y-4">
+                                <?php foreach (array_slice($recent_activity, 0, 6) as $activity): ?>
+                                    <div class="flex items-start p-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100">
+                                        <div class="w-3 h-3 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full mt-1 mr-4 shadow-sm"></div>
                                         <div class="flex-1">
-                                            <p class="text-sm text-gray-900">
-                                                <?php echo htmlspecialchars($activity['action']); ?>
+                                            <p class="text-sm text-gray-900 font-medium">
+                                                <span class="text-blue-600">
+                                                    <?php if ($activity['first_name']): ?>
+                                                        <?php echo htmlspecialchars($activity['first_name'] . ' ' . $activity['last_name']); ?>
+                                                    <?php else: ?>
+                                                        Système
+                                                    <?php endif; ?>
+                                                </span>
+                                                <span class="text-gray-700 ml-1">
+                                                    <?php echo htmlspecialchars(translate_action($activity['action'])); ?>
+                                                </span>
                                             </p>
-                                            <p class="text-xs text-gray-500">
-                                                <?php if ($activity['first_name']): ?>
-                                                    <?php echo htmlspecialchars($activity['first_name'] . ' ' . $activity['last_name']); ?>
-                                                <?php else: ?>
-                                                    Système
-                                                <?php endif; ?>
-                                                • <?php echo time_ago($activity['created_at']); ?>
+                                            <?php if (!empty($activity['details'])): ?>
+                                                <p class="text-xs text-gray-600 mt-1">
+                                                    <?php echo htmlspecialchars($activity['details']); ?>
+                                                </p>
+                                            <?php endif; ?>
+                                            <p class="text-xs text-gray-500 mt-1 flex items-center">
+                                                <i class="fas fa-clock mr-1"></i>
+                                                <?php echo time_ago($activity['created_at']); ?>
                                             </p>
                                         </div>
                                     </div>
@@ -353,51 +413,58 @@ try {
 
                 <!-- Publications récentes -->
                 <div class="lg:col-span-2">
-                    <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="section-card">
                         <div class="flex items-center justify-between mb-6">
-                            <h3 class="text-lg font-semibold text-gray-900">Publications récentes</h3>
-                            <a href="posts.php" class="text-red-600 hover:text-red-700 text-sm font-medium">
-                                Voir tout <i class="fas fa-arrow-right ml-1"></i>
+                            <h3 class="section-title">Publications récentes</h3>
+                            <a href="posts.php" class="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center">
+                                Voir tout <i class="fas fa-arrow-right ml-2"></i>
                             </a>
                         </div>
                         
                         <?php if (!empty($recent_posts)): ?>
-                            <div class="space-y-4">
-                                <?php foreach ($recent_posts as $post): ?>
-                                    <div class="border border-gray-200 rounded-lg p-4">
+                            <div class="space-y-6">
+                                <?php foreach (array_slice($recent_posts, 0, 4) as $post): ?>
+                                    <div class="bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-300">
                                         <div class="flex items-start justify-between">
                                             <div class="flex-1">
-                                                <div class="flex items-center mb-2">
-                                                    <h4 class="font-medium text-gray-900 mr-2">
+                                                <div class="flex items-center mb-3">
+                                                    <h4 class="font-semibold text-gray-900 mr-3 text-lg">
                                                         <?php echo htmlspecialchars($post['title'] ?: 'Sans titre'); ?>
                                                     </h4>
                                                     <?php
                                                     $status_colors = [
-                                                        'published' => 'bg-green-100 text-green-800',
-                                                        'scheduled' => 'bg-yellow-100 text-yellow-800',
-                                                        'draft' => 'bg-gray-100 text-gray-800',
-                                                        'failed' => 'bg-red-100 text-red-800'
+                                                        'published' => 'bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 border border-green-200',
+                                                        'scheduled' => 'bg-gradient-to-r from-purple-100 to-pink-100 text-purple-800 border border-purple-200',
+                                                        'draft' => 'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 border border-gray-300',
+                                                        'failed' => 'bg-gradient-to-r from-red-100 to-pink-100 text-red-800 border border-red-200'
                                                     ];
                                                     $status_color = $status_colors[$post['status']] ?? 'bg-gray-100 text-gray-800';
                                                     ?>
-                                                    <span class="px-2 py-1 text-xs rounded-full <?php echo $status_color; ?>">
+                                                    <span class="px-3 py-1 text-xs rounded-full font-medium <?php echo $status_color; ?>">
                                                         <?php echo ucfirst($post['status']); ?>
                                                     </span>
                                                 </div>
-                                                <p class="text-gray-600 text-sm mb-3 line-clamp-2">
-                                                    <?php echo htmlspecialchars(substr($post['content'], 0, 150)) . (strlen($post['content']) > 150 ? '...' : ''); ?>
+                                                <p class="text-gray-700 text-sm mb-4 line-clamp-2 leading-relaxed">
+                                                    <?php echo htmlspecialchars(substr($post['content'], 0, 120)) . (strlen($post['content']) > 120 ? '...' : ''); ?>
                                                 </p>
-                                                <div class="flex items-center text-xs text-gray-500">
-                                                    <span>Client: <?php echo htmlspecialchars($post['client_first_name'] . ' ' . $post['client_last_name']); ?></span>
-                                                    <span class="mx-2">•</span>
-                                                    <span>CM: <?php echo htmlspecialchars($post['cm_first_name'] . ' ' . $post['cm_last_name']); ?></span>
-                                                    <span class="mx-2">•</span>
-                                                    <span><?php echo time_ago($post['created_at']); ?></span>
+                                                <div class="flex items-center text-xs text-gray-600 space-x-4">
+                                                    <span class="flex items-center">
+                                                        <i class="fas fa-user mr-1"></i>
+                                                        <?php echo htmlspecialchars($post['client_first_name'] . ' ' . $post['client_last_name']); ?>
+                                                    </span>
+                                                    <span class="flex items-center">
+                                                        <i class="fas fa-user-tie mr-1"></i>
+                                                        <?php echo htmlspecialchars($post['cm_first_name'] . ' ' . $post['cm_last_name']); ?>
+                                                    </span>
+                                                    <span class="flex items-center">
+                                                        <i class="fas fa-clock mr-1"></i>
+                                                        <?php echo time_ago($post['created_at']); ?>
+                                                    </span>
                                                 </div>
                                             </div>
-                                            <div class="ml-4">
-                                                <a href="posts.php?action=view&id=<?php echo $post['id']; ?>" class="text-red-600 hover:text-red-700">
-                                                    <i class="fas fa-eye"></i>
+                                            <div class="ml-6">
+                                                <a href="posts.php?action=view&id=<?php echo $post['id']; ?>" class="inline-flex items-center justify-center w-10 h-10 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-full transition-colors duration-200">
+                                                    <i class="fas fa-eye text-sm"></i>
                                                 </a>
                                             </div>
                                         </div>

@@ -271,7 +271,7 @@ VALUES ('client@socialflow.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og
 
 -- Abonnement pour le client de démonstration
 INSERT INTO abonnements (client_id, type_forfait, prix, statut, date_debut, date_fin) 
-VALUES (3, 'mensuel', 29.99, 'actif', CURDATE(), DATE_ADD(CURDATE(), INTERVAL 1 MONTH));
+VALUES (3, 'mensuel', 25000, 'actif', CURDATE(), DATE_ADD(CURDATE(), INTERVAL 1 MONTH));
 
 -- Assignation du client au community manager
 INSERT INTO assignations_clients (client_id, community_manager_id) 

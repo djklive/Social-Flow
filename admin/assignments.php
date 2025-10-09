@@ -34,8 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                     
                     // Créer l'assignation
-                    $stmt = $db->prepare("INSERT INTO client_assignments (client_id, community_manager_id, assigned_by, assigned_at, status) VALUES (?, ?, ?, NOW(), 'active')");
-                    $stmt->execute([$client_id, $community_manager_id, $user_id]);
+                    $stmt = $db->prepare("INSERT INTO client_assignments (client_id, community_manager_id, assigned_at, status) VALUES (?, ?, NOW(), 'active')");
+                    $stmt->execute([$client_id, $community_manager_id]);
                     
                     // Logger l'activité
                     log_activity($user_id, 'assignment_created', "Assignation créée: Client $client_id -> CM $community_manager_id");
@@ -124,12 +124,10 @@ try {
         SELECT ca.*, 
                c.first_name as client_first_name, c.last_name as client_last_name, c.email as client_email,
                cm.first_name as cm_first_name, cm.last_name as cm_last_name, cm.email as cm_email,
-               admin.first_name as assigned_by_first_name, admin.last_name as assigned_by_last_name,
                (SELECT COUNT(*) FROM posts WHERE client_id = ca.client_id AND community_manager_id = ca.community_manager_id) as post_count
         FROM client_assignments ca
         INNER JOIN users c ON ca.client_id = c.id
         INNER JOIN users cm ON ca.community_manager_id = cm.id
-        LEFT JOIN users admin ON ca.assigned_by = admin.id
         WHERE $where_clause
         ORDER BY ca.assigned_at DESC
     ");
@@ -216,7 +214,7 @@ try {
 <body class="bg-gray-50">
     <!-- Sidebar -->
     <div class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg sidebar-transition" id="sidebar">
-        <div class="flex items-center justify-center h-16 bg-gradient-to-r from-orange-600 to-red-600">
+        <div class="flex items-center justify-center h-16 bg-gradient-to-r from-purple-600 to-pink-600">
             <i class="fas fa-share-alt text-white text-2xl mr-3"></i>
             <h1 class="text-white text-xl font-bold">SocialFlow</h1>
         </div>
@@ -224,7 +222,7 @@ try {
         <nav class="mt-8">
             <div class="px-4 mb-4">
                 <div class="flex items-center">
-                    <div class="w-10 h-10 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center">
+                    <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
                         <span class="text-white font-semibold"><?php echo $admin ? strtoupper(substr($admin['first_name'], 0, 1)) : 'A'; ?></span>
                     </div>
                     <div class="ml-3">
@@ -243,8 +241,8 @@ try {
                     <i class="fas fa-users mr-3"></i>
                     Utilisateurs
                 </a>
-                <a href="assignments.php" class="flex items-center px-4 py-2 text-sm font-medium text-white bg-orange-100 rounded-lg">
-                    <i class="fas fa-user-friends mr-3 text-orange-600"></i>
+                <a href="assignments.php" class="flex items-center px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-purple-100 to-pink-100 rounded-lg">
+                    <i class="fas fa-user-friends mr-3 text-purple-600"></i>
                     Assignations
                 </a>
                 <a href="posts.php" class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg">
@@ -288,7 +286,7 @@ try {
                     <p class="text-sm text-gray-600">Assignez les clients aux Community Managers</p>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <button onclick="openCreateAssignmentModal()" class="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition duration-300">
+                    <button onclick="openCreateAssignmentModal()" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300">
                         <i class="fas fa-plus mr-2"></i>Nouvelle Assignation
                     </button>
                     <button class="p-2 text-gray-400 hover:text-gray-600">
@@ -385,11 +383,11 @@ try {
                     <div class="flex-1 min-w-64">
                         <input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>" 
                                placeholder="Rechercher par nom client ou CM..." 
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                     </div>
                     
                     <div>
-                        <select name="status" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                        <select name="status" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             <option value="all" <?php echo $status_filter === 'all' ? 'selected' : ''; ?>>Tous les statuts</option>
                             <option value="active" <?php echo $status_filter === 'active' ? 'selected' : ''; ?>>Actif</option>
                             <option value="inactive" <?php echo $status_filter === 'inactive' ? 'selected' : ''; ?>>Inactif</option>
@@ -397,7 +395,7 @@ try {
                     </div>
                     
                     <div>
-                        <select name="cm_id" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                        <select name="cm_id" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             <option value="all" <?php echo $cm_filter === 'all' ? 'selected' : ''; ?>>Tous les CM</option>
                             <?php foreach ($community_managers as $cm): ?>
                                 <option value="<?php echo $cm['id']; ?>" <?php echo $cm_filter == $cm['id'] ? 'selected' : ''; ?>>
@@ -407,7 +405,7 @@ try {
                         </select>
                     </div>
                     
-                    <button type="submit" class="bg-orange-600 text-white px-6 py-2 rounded-lg hover:bg-orange-700 transition duration-300">
+                    <button type="submit" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300">
                         <i class="fas fa-filter mr-2"></i>Filtrer
                     </button>
                     
@@ -486,7 +484,7 @@ try {
                                             <?php echo $assignment['post_count']; ?>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            <?php echo htmlspecialchars($assignment['assigned_by_first_name'] . ' ' . $assignment['assigned_by_last_name']); ?>
+                                            Système
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                             <?php echo format_date_fr($assignment['assigned_at'], 'd/m/Y H:i'); ?>
@@ -522,7 +520,7 @@ try {
                                 Aucune assignation dans le système.
                             <?php endif; ?>
                         </p>
-                        <button onclick="openCreateAssignmentModal()" class="mt-4 inline-block bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition duration-300">
+                        <button onclick="openCreateAssignmentModal()" class="mt-4 inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300">
                             <i class="fas fa-plus mr-2"></i>Créer une assignation
                         </button>
                     </div>
@@ -543,7 +541,7 @@ try {
                         <div class="mb-4">
                             <label for="client_id" class="block text-sm font-medium text-gray-700 mb-2">Client</label>
                             <select id="client_id" name="client_id" required
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                                 <option value="">Sélectionner un client</option>
                                 <?php foreach ($clients as $client): ?>
                                     <option value="<?php echo $client['id']; ?>">
@@ -557,7 +555,7 @@ try {
                         <div class="mb-6">
                             <label for="community_manager_id" class="block text-sm font-medium text-gray-700 mb-2">Community Manager</label>
                             <select id="community_manager_id" name="community_manager_id" required
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                                 <option value="">Sélectionner un Community Manager</option>
                                 <?php foreach ($community_managers as $cm): ?>
                                     <option value="<?php echo $cm['id']; ?>">
@@ -573,7 +571,7 @@ try {
                                     class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition duration-300">
                                 Annuler
                             </button>
-                            <button type="submit" class="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition duration-300">
+                            <button type="submit" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300">
                                 <i class="fas fa-plus mr-2"></i>Créer
                             </button>
                         </div>
@@ -610,7 +608,7 @@ try {
                         <div class="mb-6">
                             <label for="edit_status" class="block text-sm font-medium text-gray-700 mb-2">Statut</label>
                             <select id="edit_status" name="status"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                                 <option value="active">Actif</option>
                                 <option value="inactive">Inactif</option>
                             </select>
@@ -621,7 +619,7 @@ try {
                                     class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition duration-300">
                                 Annuler
                             </button>
-                            <button type="submit" class="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition duration-300">
+                            <button type="submit" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300">
                                 <i class="fas fa-save mr-2"></i>Modifier
                             </button>
                         </div>

@@ -18,6 +18,11 @@ try {
     $stmt->execute([$user_id]);
     $cm = $stmt->fetch();
     
+    // Notifications non lues
+    $stmt = $db->prepare("SELECT COUNT(*) as unread_count FROM notifications WHERE user_id = ? AND is_read = FALSE");
+    $stmt->execute([$user_id]);
+    $unread_notifications = $stmt->fetch()['unread_count'];
+    
     // Paramètres de filtrage
     $status_filter = $_GET['status'] ?? 'all';
     $search = $_GET['search'] ?? '';
@@ -106,10 +111,10 @@ try {
         }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-blue-50">
     <!-- Sidebar -->
-    <div class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg sidebar-transition" id="sidebar">
-        <div class="flex items-center justify-center h-16 bg-gradient-to-r from-green-600 to-blue-600">
+    <div class="fixed inset-y-0 left-0 z-50 w-64 bg-blue-100 shadow-lg sidebar-transition" id="sidebar">
+        <div class="flex items-center justify-center h-16 bg-gradient-to-r from-blue-500 to-blue-600">
             <i class="fas fa-share-alt text-white text-2xl mr-3"></i>
             <h1 class="text-white text-xl font-bold">SocialFlow</h1>
         </div>
@@ -117,51 +122,55 @@ try {
         <nav class="mt-8">
             <div class="px-4 mb-4">
                 <div class="flex items-center">
-                    <div class="w-10 h-10 bg-gradient-to-r from-green-500 to-blue-500 rounded-full flex items-center justify-center">
+                    <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
                         <span class="text-white font-semibold"><?php echo strtoupper(substr($cm['first_name'], 0, 1)); ?></span>
                     </div>
                     <div class="ml-3">
-                        <p class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($cm['first_name'] . ' ' . $cm['last_name']); ?></p>
-                        <p class="text-xs text-gray-500">Community Manager</p>
+                        <p class="text-sm font-medium text-blue-900"><?php echo htmlspecialchars($cm['first_name'] . ' ' . $cm['last_name']); ?></p>
+                        <p class="text-xs text-blue-700">Community Manager</p>
                     </div>
                 </div>
             </div>
             
             <div class="px-4 space-y-2">
-                <a href="dashboard.php" class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg">
+                <a href="dashboard.php" class="flex items-center px-4 py-2 text-sm font-medium text-blue-800 hover:bg-blue-200 rounded-lg">
                     <i class="fas fa-tachometer-alt mr-3"></i>
                     Dashboard
                 </a>
-                <a href="clients.php" class="flex items-center px-4 py-2 text-sm font-medium text-white bg-green-100 rounded-lg">
-                    <i class="fas fa-users mr-3 text-green-600"></i>
+                <a href="clients.php" class="flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-200 rounded-lg">
+                    <i class="fas fa-users mr-3 text-blue-800"></i>
                     Mes Clients
                 </a>
-                <a href="posts.php" class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg">
+                <a href="posts.php" class="flex items-center px-4 py-2 text-sm font-medium text-blue-800 hover:bg-blue-200 rounded-lg">
                     <i class="fas fa-newspaper mr-3"></i>
                     Publications
                 </a>
-                <a href="drafts.php" class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg">
+                <a href="content_proposals.php" class="flex items-center px-4 py-2 text-sm font-medium text-blue-800 hover:bg-blue-200 rounded-lg">
+                    <i class="fas fa-paper-plane mr-3"></i>
+                    Propositions
+                </a>
+                <a href="drafts.php" class="flex items-center px-4 py-2 text-sm font-medium text-blue-800 hover:bg-blue-200 rounded-lg">
                     <i class="fas fa-edit mr-3"></i>
                     Brouillons
                 </a>
-                <a href="scheduled.php" class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg">
+                <a href="scheduled.php" class="flex items-center px-4 py-2 text-sm font-medium text-blue-800 hover:bg-blue-200 rounded-lg">
                     <i class="fas fa-calendar-alt mr-3"></i>
                     Programmé
                 </a>
-                <a href="analytics.php" class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg">
+                <a href="analytics.php" class="flex items-center px-4 py-2 text-sm font-medium text-blue-800 hover:bg-blue-200 rounded-lg">
                     <i class="fas fa-chart-bar mr-3"></i>
                     Analytics
                 </a>
-                <a href="notifications.php" class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg relative">
+                <a href="notifications.php" class="flex items-center px-4 py-2 text-sm font-medium text-blue-800 hover:bg-blue-200 rounded-lg relative">
                     <i class="fas fa-bell mr-3"></i>
                     Notifications
                     <?php if ($unread_notifications > 0): ?>
-                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                        <span class="ml-auto bg-blue-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                             <?php echo $unread_notifications; ?>
                         </span>
                     <?php endif; ?>
                 </a>
-                <a href="settings.php" class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg">
+                <a href="settings.php" class="flex items-center px-4 py-2 text-sm font-medium text-blue-800 hover:bg-blue-200 rounded-lg">
                     <i class="fas fa-cog mr-3"></i>
                     Paramètres
                 </a>
@@ -169,7 +178,7 @@ try {
         </nav>
         
         <div class="absolute bottom-0 w-full p-4">
-            <a href="../auth/logout.php" class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg">
+            <a href="../auth/logout.php" class="flex items-center px-4 py-2 text-sm font-medium text-blue-800 hover:bg-blue-200 rounded-lg">
                 <i class="fas fa-sign-out-alt mr-3"></i>
                 Déconnexion
             </a>
@@ -179,20 +188,20 @@ try {
     <!-- Main Content -->
     <div class="ml-64">
         <!-- Top Navigation -->
-        <header class="bg-white shadow-sm border-b border-gray-200">
+        <header class="bg-blue-200 shadow-sm border-b border-blue-300">
             <div class="flex items-center justify-between px-6 py-4">
                 <div>
-                    <h1 class="text-2xl font-semibold text-gray-900">Mes Clients</h1>
-                    <p class="text-sm text-gray-600">Gérez vos clients assignés et leurs publications</p>
+                    <h1 class="text-2xl font-semibold text-blue-900">Mes Clients</h1>
+                    <p class="text-sm text-blue-700">Gérez vos clients assignés et leurs publications</p>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <button class="p-2 text-gray-400 hover:text-gray-600">
+                    <button class="p-2 text-blue-600 hover:text-blue-800">
                         <i class="fas fa-search text-lg"></i>
                     </button>
-                    <button class="p-2 text-gray-400 hover:text-gray-600 relative">
+                    <button class="p-2 text-blue-600 hover:text-blue-800 relative">
                         <i class="fas fa-bell text-lg"></i>
                         <?php if ($unread_notifications > 0): ?>
-                            <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                            <span class="absolute -top-1 -right-1 bg-blue-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
                                 <?php echo $unread_notifications; ?>
                             </span>
                         <?php endif; ?>

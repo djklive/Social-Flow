@@ -202,7 +202,7 @@ try {
 <body class="bg-gray-50">
     <!-- Sidebar -->
     <div class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg sidebar-transition" id="sidebar">
-        <div class="flex items-center justify-center h-16 bg-gradient-to-r from-orange-600 to-red-600">
+        <div class="flex items-center justify-center h-16 bg-gradient-to-r from-purple-600 to-pink-600">
             <i class="fas fa-share-alt text-white text-2xl mr-3"></i>
             <h1 class="text-white text-xl font-bold">SocialFlow</h1>
         </div>
@@ -210,7 +210,7 @@ try {
         <nav class="mt-8">
             <div class="px-4 mb-4">
                 <div class="flex items-center">
-                    <div class="w-10 h-10 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center">
+                    <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
                         <span class="text-white font-semibold"><?php echo $admin ? strtoupper(substr($admin['first_name'], 0, 1)) : 'A'; ?></span>
                     </div>
                     <div class="ml-3">
@@ -233,8 +233,8 @@ try {
                     <i class="fas fa-user-friends mr-3"></i>
                     Assignations
                 </a>
-                <a href="posts.php" class="flex items-center px-4 py-2 text-sm font-medium text-white bg-orange-100 rounded-lg">
-                    <i class="fas fa-newspaper mr-3 text-orange-600"></i>
+                <a href="posts.php" class="flex items-center px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-purple-100 to-pink-100 rounded-lg">
+                    <i class="fas fa-newspaper mr-3 text-purple-600"></i>
                     Publications
                 </a>
                 <a href="subscriptions.php" class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg">
@@ -330,8 +330,8 @@ try {
                 
                 <div class="bg-white rounded-lg shadow-sm p-6 card-hover">
                     <div class="flex items-center">
-                        <div class="p-3 rounded-full bg-yellow-100">
-                            <i class="fas fa-clock text-yellow-600 text-xl"></i>
+                        <div class="p-3 rounded-full bg-gradient-to-r from-blue-100 to-cyan-100">
+                            <i class="fas fa-clock text-blue-600 text-xl"></i>
                         </div>
                         <div class="ml-4">
                             <p class="text-sm font-medium text-gray-600">Programmées</p>
@@ -395,11 +395,11 @@ try {
                     <div class="flex-1 min-w-64">
                         <input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>" 
                                placeholder="Rechercher dans les publications..." 
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                     </div>
                     
                     <div>
-                        <select name="status" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                        <select name="status" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             <option value="all" <?php echo $status_filter === 'all' ? 'selected' : ''; ?>>Tous les statuts</option>
                             <option value="published" <?php echo $status_filter === 'published' ? 'selected' : ''; ?>>Publié</option>
                             <option value="scheduled" <?php echo $status_filter === 'scheduled' ? 'selected' : ''; ?>>Programmé</option>
@@ -409,7 +409,7 @@ try {
                     </div>
                     
                     <div>
-                        <select name="client_id" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                        <select name="client_id" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             <option value="all" <?php echo $client_filter === 'all' ? 'selected' : ''; ?>>Tous les clients</option>
                             <?php foreach ($clients as $client): ?>
                                 <option value="<?php echo $client['id']; ?>" <?php echo $client_filter == $client['id'] ? 'selected' : ''; ?>>
@@ -420,7 +420,7 @@ try {
                     </div>
                     
                     <div>
-                        <select name="cm_id" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                        <select name="cm_id" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             <option value="all" <?php echo $cm_filter === 'all' ? 'selected' : ''; ?>>Tous les CM</option>
                             <?php foreach ($community_managers as $cm): ?>
                                 <option value="<?php echo $cm['id']; ?>" <?php echo $cm_filter == $cm['id'] ? 'selected' : ''; ?>>
@@ -431,7 +431,7 @@ try {
                     </div>
                     
                     <div>
-                        <select name="platform" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                        <select name="platform" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             <option value="all" <?php echo $platform_filter === 'all' ? 'selected' : ''; ?>>Toutes les plateformes</option>
                             <option value="facebook" <?php echo $platform_filter === 'facebook' ? 'selected' : ''; ?>>Facebook</option>
                             <option value="instagram" <?php echo $platform_filter === 'instagram' ? 'selected' : ''; ?>>Instagram</option>
@@ -441,7 +441,7 @@ try {
                         </select>
                     </div>
                     
-                    <button type="submit" class="bg-orange-600 text-white px-6 py-2 rounded-lg hover:bg-orange-700 transition duration-300">
+                    <button type="submit" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300">
                         <i class="fas fa-filter mr-2"></i>Filtrer
                     </button>
                     
@@ -466,7 +466,7 @@ try {
                                             <?php
                                             $status_colors = [
                                                 'published' => 'bg-green-100 text-green-800',
-                                                'scheduled' => 'bg-yellow-100 text-yellow-800',
+                                                'scheduled' => 'bg-gradient-to-r from-blue-100 to-cyan-100 text-blue-800',
                                                 'draft' => 'bg-gray-100 text-gray-800',
                                                 'failed' => 'bg-red-100 text-red-800'
                                             ];
@@ -590,7 +590,7 @@ try {
                         <div class="mb-6">
                             <label for="edit_status" class="block text-sm font-medium text-gray-700 mb-2">Nouveau statut</label>
                             <select id="edit_status" name="status"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                                 <option value="published">Publié</option>
                                 <option value="scheduled">Programmé</option>
                                 <option value="draft">Brouillon</option>
@@ -603,7 +603,7 @@ try {
                                     class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition duration-300">
                                 Annuler
                             </button>
-                            <button type="submit" class="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition duration-300">
+                            <button type="submit" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300">
                                 <i class="fas fa-save mr-2"></i>Modifier
                             </button>
                         </div>

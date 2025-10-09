@@ -115,6 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 $success_message = 'Préférences de notifications mises à jour.';
                 break;
+                
         }
         
     } catch (Exception $e) {
@@ -175,6 +176,139 @@ try {
         .card-hover:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Styles pour le mode sombre */
+        .theme-dark {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: #475569;
+            --sidebar-bg: #1e293b;
+            --card-bg: #334155;
+        }
+        
+        /* Application globale du mode sombre */
+        .theme-dark,
+        .theme-dark * {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+        
+        .theme-dark body {
+            background-color: var(--bg-primary) !important;
+            color: var(--text-primary) !important;
+        }
+        
+        .theme-dark .bg-gray-50 {
+            background-color: var(--bg-primary) !important;
+        }
+        
+        .theme-dark .bg-white {
+            background-color: var(--card-bg) !important;
+            color: var(--text-primary) !important;
+        }
+        
+        .theme-dark .bg-blue-100 {
+            background-color: var(--sidebar-bg) !important;
+        }
+        
+        .theme-dark .bg-blue-200 {
+            background-color: var(--bg-tertiary) !important;
+        }
+        
+        .theme-dark .text-gray-900 {
+            color: var(--text-primary) !important;
+        }
+        
+        .theme-dark .text-gray-700 {
+            color: var(--text-secondary) !important;
+        }
+        
+        .theme-dark .text-gray-500 {
+            color: var(--text-muted) !important;
+        }
+        
+        .theme-dark .text-blue-800 {
+            color: var(--text-primary) !important;
+        }
+        
+        .theme-dark .text-blue-700 {
+            color: var(--text-secondary) !important;
+        }
+        
+        .theme-dark .text-blue-900 {
+            color: var(--text-primary) !important;
+        }
+        
+        .theme-dark .border-gray-300 {
+            border-color: var(--border-color) !important;
+        }
+        
+        .theme-dark .bg-green-600 {
+            background-color: #059669 !important;
+        }
+        
+        .theme-dark .bg-green-700 {
+            background-color: #047857 !important;
+        }
+        
+        .theme-dark .hover\\:bg-green-700:hover {
+            background-color: #047857 !important;
+        }
+        
+        .theme-dark .from-blue-500 {
+            --tw-gradient-from: #3b82f6 !important;
+        }
+        
+        .theme-dark .to-blue-600 {
+            --tw-gradient-to: #2563eb !important;
+        }
+        
+        .theme-dark .from-green-600 {
+            --tw-gradient-from: #059669 !important;
+        }
+        
+        .theme-dark .to-blue-600 {
+            --tw-gradient-to: #2563eb !important;
+        }
+        
+        /* Styles spécifiques pour les éléments de formulaire */
+        .theme-dark input,
+        .theme-dark select,
+        .theme-dark textarea {
+            background-color: var(--bg-secondary) !important;
+            color: var(--text-primary) !important;
+            border-color: var(--border-color) !important;
+        }
+        
+        .theme-dark input:focus,
+        .theme-dark select:focus,
+        .theme-dark textarea:focus {
+            border-color: #059669 !important;
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1) !important;
+        }
+        
+        /* Styles pour les boutons */
+        .theme-dark button {
+            background-color: var(--bg-tertiary) !important;
+            color: var(--text-primary) !important;
+            border-color: var(--border-color) !important;
+        }
+        
+        .theme-dark button:hover {
+            background-color: var(--bg-secondary) !important;
+        }
+        
+        /* Styles pour les cartes et conteneurs */
+        .theme-dark .shadow-sm {
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3) !important;
+        }
+        
+        .theme-dark .shadow-lg {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2) !important;
         }
     </style>
 </head>
@@ -469,6 +603,57 @@ try {
                 </div>
             </div>
 
+            <!-- Préférences d'affichage -->
+            <div class="mt-6">
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6">Préférences d'affichage</h2>
+                    
+                    <div class="space-y-6">
+                        <!-- Langue -->
+                        <div>
+                            <label for="language" class="block text-sm font-medium text-gray-700 mb-2">Langue</label>
+                            <select id="language" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                                <option value="fr">Français</option>
+                                <option value="en">English</option>
+                                <option value="es">Español</option>
+                            </select>
+                            <p class="text-xs text-gray-500 mt-1">Choisissez votre langue préférée pour l'interface</p>
+                        </div>
+                        
+                        <!-- Mode d'éclairage -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Mode d'éclairage</label>
+                            <div class="space-y-3">
+                                <label class="flex items-center">
+                                    <input type="radio" name="theme_mode" value="light" class="mr-3 text-green-600 focus:ring-green-500">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-sun text-yellow-500 mr-2"></i>
+                                        <span class="text-sm text-gray-700">Mode clair</span>
+                                    </div>
+                                </label>
+                                
+                                <label class="flex items-center">
+                                    <input type="radio" name="theme_mode" value="dark" class="mr-3 text-green-600 focus:ring-green-500">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-moon text-indigo-500 mr-2"></i>
+                                        <span class="text-sm text-gray-700">Mode sombre</span>
+                                    </div>
+                                </label>
+                                
+                                <label class="flex items-center">
+                                    <input type="radio" name="theme_mode" value="auto" class="mr-3 text-green-600 focus:ring-green-500">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-adjust text-gray-500 mr-2"></i>
+                                        <span class="text-sm text-gray-700">Automatique (suit les préférences système)</span>
+                                    </div>
+                                </label>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">Choisissez le mode d'éclairage qui vous convient le mieux</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Informations du compte -->
             <div class="mt-6">
                 <div class="bg-white rounded-lg shadow-sm p-6">
@@ -527,6 +712,103 @@ try {
                 }, 500);
             });
         }, 5000);
+
+        // Gestion des préférences d'affichage
+        class DisplayPreferences {
+            constructor() {
+                this.init();
+            }
+
+            init() {
+                this.loadPreferences();
+                this.bindEvents();
+                this.applyTheme();
+            }
+
+            loadPreferences() {
+                // Charger les préférences depuis localStorage
+                const savedLanguage = localStorage.getItem('user_language') || 'fr';
+                const savedTheme = localStorage.getItem('user_theme') || 'light';
+
+                // Appliquer les valeurs aux contrôles
+                const languageSelect = document.getElementById('language');
+                const themeRadios = document.querySelectorAll('input[name="theme_mode"]');
+
+                if (languageSelect) {
+                    languageSelect.value = savedLanguage;
+                }
+
+                themeRadios.forEach(radio => {
+                    if (radio.value === savedTheme) {
+                        radio.checked = true;
+                    }
+                });
+            }
+
+            bindEvents() {
+                // Événement pour la langue
+                const languageSelect = document.getElementById('language');
+                if (languageSelect) {
+                    languageSelect.addEventListener('change', (e) => {
+                        localStorage.setItem('user_language', e.target.value);
+                        this.showNotification('Langue mise à jour !');
+                    });
+                }
+
+                // Événements pour le thème
+                const themeRadios = document.querySelectorAll('input[name="theme_mode"]');
+                themeRadios.forEach(radio => {
+                    radio.addEventListener('change', (e) => {
+                        localStorage.setItem('user_theme', e.target.value);
+                        this.applyTheme();
+                        this.showNotification('Mode d\'éclairage mis à jour !');
+                    });
+                });
+            }
+
+            applyTheme() {
+                const theme = localStorage.getItem('user_theme') || 'light';
+                const body = document.body;
+                const html = document.documentElement;
+
+                // Supprimer les classes de thème existantes
+                body.classList.remove('theme-light', 'theme-dark');
+                html.classList.remove('theme-light', 'theme-dark');
+
+                let actualTheme = theme;
+                if (theme === 'auto') {
+                    // Détecter la préférence système
+                    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    actualTheme = prefersDark ? 'dark' : 'light';
+                }
+
+                // Appliquer la classe au body et html
+                body.classList.add(`theme-${actualTheme}`);
+                html.classList.add(`theme-${actualTheme}`);
+                
+                // Forcer le re-rendu
+                body.style.display = 'none';
+                body.offsetHeight; // Trigger reflow
+                body.style.display = '';
+                
+                console.log(`Thème appliqué: ${actualTheme}`);
+            }
+
+            showNotification(message) {
+                // Créer une notification temporaire
+                const notification = document.createElement('div');
+                notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+                notification.textContent = message;
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            }
+        }
+
+        // Initialiser les préférences d'affichage
+        new DisplayPreferences();
     </script>
 </body>
 </html>

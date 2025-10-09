@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 // Créer l'utilisateur
                 $hashed_password = hash_password($password);
-                $stmt = $db->prepare("INSERT INTO users (first_name, last_name, email, phone, password, role, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())");
+                $stmt = $db->prepare("INSERT INTO users (first_name, last_name, email, phone, password_hash, role, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())");
                 $stmt->execute([$first_name, $last_name, $email, $phone, $hashed_password, $role]);
                 
                 // Logger l'activité
@@ -109,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 if ($user_id_to_reset > 0 && !empty($new_password)) {
                     $hashed_password = hash_password($new_password);
-                    $stmt = $db->prepare("UPDATE users SET password = ? WHERE id = ?");
+                    $stmt = $db->prepare("UPDATE users SET password_hash = ? WHERE id = ?");
                     $stmt->execute([$hashed_password, $user_id_to_reset]);
                     
                     // Logger l'activité
@@ -167,7 +167,7 @@ try {
     $stmt = $db->prepare("
         SELECT u.*, 
                (SELECT COUNT(*) FROM posts WHERE client_id = u.id) as post_count,
-               (SELECT COUNT(*) FROM subscriptions WHERE user_id = u.id) as subscription_count
+               (SELECT COUNT(*) FROM subscriptions WHERE client_id = u.id) as subscription_count
         FROM users u 
         WHERE $where_clause
         ORDER BY u.created_at DESC
@@ -232,7 +232,7 @@ try {
 <body class="bg-gray-50">
     <!-- Sidebar -->
     <div class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg sidebar-transition" id="sidebar">
-        <div class="flex items-center justify-center h-16 bg-gradient-to-r from-orange-600 to-red-600">
+        <div class="flex items-center justify-center h-16 bg-gradient-to-r from-purple-600 to-pink-600">
             <i class="fas fa-share-alt text-white text-2xl mr-3"></i>
             <h1 class="text-white text-xl font-bold">SocialFlow</h1>
         </div>
@@ -240,7 +240,7 @@ try {
         <nav class="mt-8">
             <div class="px-4 mb-4">
                 <div class="flex items-center">
-                    <div class="w-10 h-10 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center">
+                    <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
                         <span class="text-white font-semibold"><?php echo $admin ? strtoupper(substr($admin['first_name'], 0, 1)) : 'A'; ?></span>
                     </div>
                     <div class="ml-3">
@@ -255,8 +255,8 @@ try {
                     <i class="fas fa-tachometer-alt mr-3"></i>
                     Dashboard
                 </a>
-                <a href="users.php" class="flex items-center px-4 py-2 text-sm font-medium text-white bg-orange-100 rounded-lg">
-                    <i class="fas fa-users mr-3 text-orange-600"></i>
+                <a href="users.php" class="flex items-center px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-purple-100 to-pink-100 rounded-lg">
+                    <i class="fas fa-users mr-3 text-purple-600"></i>
                     Utilisateurs
                 </a>
                 <a href="assignments.php" class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg">
@@ -304,7 +304,7 @@ try {
                     <p class="text-sm text-gray-600">Gérez tous les utilisateurs du système</p>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <button onclick="openCreateUserModal()" class="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition duration-300">
+                    <button onclick="openCreateUserModal()" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300">
                         <i class="fas fa-plus mr-2"></i>Nouvel Utilisateur
                     </button>
                     <button class="p-2 text-gray-400 hover:text-gray-600">
@@ -372,8 +372,8 @@ try {
                 
                 <div class="bg-white rounded-lg shadow-sm p-6 card-hover">
                     <div class="flex items-center">
-                        <div class="p-3 rounded-full bg-orange-100">
-                            <i class="fas fa-user-shield text-orange-600 text-xl"></i>
+                        <div class="p-3 rounded-full bg-gradient-to-r from-purple-100 to-pink-100">
+                            <i class="fas fa-user-shield text-purple-600 text-xl"></i>
                         </div>
                         <div class="ml-4">
                             <p class="text-sm font-medium text-gray-600">Administrateurs</p>
@@ -413,11 +413,11 @@ try {
                     <div class="flex-1 min-w-64">
                         <input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>" 
                                placeholder="Rechercher par nom ou email..." 
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                     </div>
                     
                     <div>
-                        <select name="role" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                        <select name="role" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             <option value="all" <?php echo $role_filter === 'all' ? 'selected' : ''; ?>>Tous les rôles</option>
                             <option value="client" <?php echo $role_filter === 'client' ? 'selected' : ''; ?>>Client</option>
                             <option value="community_manager" <?php echo $role_filter === 'community_manager' ? 'selected' : ''; ?>>Community Manager</option>
@@ -426,14 +426,14 @@ try {
                     </div>
                     
                     <div>
-                        <select name="status" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                        <select name="status" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             <option value="all" <?php echo $status_filter === 'all' ? 'selected' : ''; ?>>Tous les statuts</option>
                             <option value="active" <?php echo $status_filter === 'active' ? 'selected' : ''; ?>>Actif</option>
                             <option value="inactive" <?php echo $status_filter === 'inactive' ? 'selected' : ''; ?>>Inactif</option>
                         </select>
                     </div>
                     
-                    <button type="submit" class="bg-orange-600 text-white px-6 py-2 rounded-lg hover:bg-orange-700 transition duration-300">
+                    <button type="submit" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300">
                         <i class="fas fa-filter mr-2"></i>Filtrer
                     </button>
                     
@@ -464,7 +464,7 @@ try {
                                     <tr class="user-card">
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
-                                                <div class="w-10 h-10 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center">
+                                                <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
                                                     <span class="text-white font-semibold text-sm">
                                                         <?php echo strtoupper(substr($user['first_name'], 0, 1)); ?>
                                                     </span>
@@ -484,7 +484,7 @@ try {
                                             $role_colors = [
                                                 'client' => 'bg-purple-100 text-purple-800',
                                                 'community_manager' => 'bg-green-100 text-green-800',
-                                                'admin' => 'bg-orange-100 text-orange-800'
+                                                'admin' => 'bg-gradient-to-r from-purple-100 to-pink-100 text-purple-800'
                                             ];
                                             $role_color = $role_colors[$user['role']] ?? 'bg-gray-100 text-gray-800';
                                             ?>
@@ -520,7 +520,7 @@ try {
                                                     <i class="fas fa-edit"></i>
                                                 </button>
                                                 <button onclick="openResetPasswordModal(<?php echo $user['id']; ?>)" 
-                                                        class="text-yellow-600 hover:text-yellow-700" title="Réinitialiser mot de passe">
+                                                        class="text-blue-600 hover:text-blue-700" title="Réinitialiser mot de passe">
                                                     <i class="fas fa-key"></i>
                                                 </button>
                                                 <?php if ($user['id'] != $user_id): ?>
@@ -550,7 +550,7 @@ try {
                                 Aucun utilisateur dans le système.
                             <?php endif; ?>
                         </p>
-                        <button onclick="openCreateUserModal()" class="mt-4 inline-block bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition duration-300">
+                        <button onclick="openCreateUserModal()" class="mt-4 inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300">
                             <i class="fas fa-plus mr-2"></i>Créer un utilisateur
                         </button>
                     </div>
@@ -572,31 +572,31 @@ try {
                             <div>
                                 <label for="first_name" class="block text-sm font-medium text-gray-700 mb-2">Prénom</label>
                                 <input type="text" id="first_name" name="first_name" required
-                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             </div>
                             <div>
                                 <label for="last_name" class="block text-sm font-medium text-gray-700 mb-2">Nom</label>
                                 <input type="text" id="last_name" name="last_name" required
-                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             </div>
                         </div>
                         
                         <div class="mb-4">
                             <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
                             <input type="email" id="email" name="email" required
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                         </div>
                         
                         <div class="mb-4">
                             <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Téléphone (optionnel)</label>
                             <input type="tel" id="phone" name="phone"
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                         </div>
                         
                         <div class="mb-4">
                             <label for="role" class="block text-sm font-medium text-gray-700 mb-2">Rôle</label>
                             <select id="role" name="role" required
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                                 <option value="">Sélectionner un rôle</option>
                                 <option value="client">Client</option>
                                 <option value="community_manager">Community Manager</option>
@@ -607,7 +607,7 @@ try {
                         <div class="mb-6">
                             <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Mot de passe</label>
                             <input type="password" id="password" name="password" required
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                         </div>
                         
                         <div class="flex items-center justify-end space-x-4">
@@ -615,7 +615,7 @@ try {
                                     class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition duration-300">
                                 Annuler
                             </button>
-                            <button type="submit" class="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition duration-300">
+                            <button type="submit" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300">
                                 <i class="fas fa-plus mr-2"></i>Créer
                             </button>
                         </div>
@@ -639,31 +639,31 @@ try {
                             <div>
                                 <label for="edit_first_name" class="block text-sm font-medium text-gray-700 mb-2">Prénom</label>
                                 <input type="text" id="edit_first_name" name="first_name" required
-                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             </div>
                             <div>
                                 <label for="edit_last_name" class="block text-sm font-medium text-gray-700 mb-2">Nom</label>
                                 <input type="text" id="edit_last_name" name="last_name" required
-                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             </div>
                         </div>
                         
                         <div class="mb-4">
                             <label for="edit_email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
                             <input type="email" id="edit_email" name="email" required
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                         </div>
                         
                         <div class="mb-4">
                             <label for="edit_phone" class="block text-sm font-medium text-gray-700 mb-2">Téléphone</label>
                             <input type="tel" id="edit_phone" name="phone"
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                         </div>
                         
                         <div class="mb-4">
                             <label for="edit_role" class="block text-sm font-medium text-gray-700 mb-2">Rôle</label>
                             <select id="edit_role" name="role" required
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                                 <option value="client">Client</option>
                                 <option value="community_manager">Community Manager</option>
                                 <option value="admin">Administrateur</option>
@@ -673,7 +673,7 @@ try {
                         <div class="mb-6">
                             <label for="edit_status" class="block text-sm font-medium text-gray-700 mb-2">Statut</label>
                             <select id="edit_status" name="status"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                                 <option value="active">Actif</option>
                                 <option value="inactive">Inactif</option>
                             </select>
@@ -684,7 +684,7 @@ try {
                                     class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition duration-300">
                                 Annuler
                             </button>
-                            <button type="submit" class="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition duration-300">
+                            <button type="submit" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300">
                                 <i class="fas fa-save mr-2"></i>Modifier
                             </button>
                         </div>
@@ -707,7 +707,7 @@ try {
                         <div class="mb-6">
                             <label for="new_password" class="block text-sm font-medium text-gray-700 mb-2">Nouveau mot de passe</label>
                             <input type="password" id="new_password" name="new_password" required
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                         </div>
                         
                         <div class="flex items-center justify-end space-x-4">
@@ -715,7 +715,7 @@ try {
                                     class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition duration-300">
                                 Annuler
                             </button>
-                            <button type="submit" class="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition duration-300">
+                            <button type="submit" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300">
                                 <i class="fas fa-key mr-2"></i>Réinitialiser
                             </button>
                         </div>

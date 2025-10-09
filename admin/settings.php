@@ -169,6 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 $success_message = 'Préférences de notifications mises à jour.';
                 break;
+                
         }
         
     } catch (Exception $e) {
@@ -216,12 +217,137 @@ try {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
         }
+        
+        /* Styles pour le mode sombre */
+        .theme-dark {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: #475569;
+            --sidebar-bg: #1e293b;
+            --card-bg: #334155;
+        }
+        
+        /* Application globale du mode sombre */
+        .theme-dark,
+        .theme-dark * {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+        
+        .theme-dark body {
+            background-color: var(--bg-primary) !important;
+            color: var(--text-primary) !important;
+        }
+        
+        .theme-dark .bg-gray-50 {
+            background-color: var(--bg-primary) !important;
+        }
+        
+        .theme-dark .bg-white {
+            background-color: var(--card-bg) !important;
+            color: var(--text-primary) !important;
+        }
+        
+        .theme-dark .bg-blue-100 {
+            background-color: var(--sidebar-bg) !important;
+        }
+        
+        .theme-dark .bg-blue-200 {
+            background-color: var(--bg-tertiary) !important;
+        }
+        
+        .theme-dark .text-gray-900 {
+            color: var(--text-primary) !important;
+        }
+        
+        .theme-dark .text-gray-700 {
+            color: var(--text-secondary) !important;
+        }
+        
+        .theme-dark .text-gray-500 {
+            color: var(--text-muted) !important;
+        }
+        
+        .theme-dark .text-blue-800 {
+            color: var(--text-primary) !important;
+        }
+        
+        .theme-dark .text-blue-700 {
+            color: var(--text-secondary) !important;
+        }
+        
+        .theme-dark .text-blue-900 {
+            color: var(--text-primary) !important;
+        }
+        
+        .theme-dark .border-gray-300 {
+            border-color: var(--border-color) !important;
+        }
+        
+        .theme-dark .from-purple-600 {
+            --tw-gradient-from: #7c3aed !important;
+        }
+        
+        .theme-dark .to-pink-600 {
+            --tw-gradient-to: #db2777 !important;
+        }
+        
+        .theme-dark .from-purple-100 {
+            --tw-gradient-from: var(--bg-tertiary) !important;
+        }
+        
+        .theme-dark .to-pink-100 {
+            --tw-gradient-to: var(--bg-tertiary) !important;
+        }
+        
+        .theme-dark .text-purple-600 {
+            color: #a855f7 !important;
+        }
+        
+        /* Styles spécifiques pour les éléments de formulaire */
+        .theme-dark input,
+        .theme-dark select,
+        .theme-dark textarea {
+            background-color: var(--bg-secondary) !important;
+            color: var(--text-primary) !important;
+            border-color: var(--border-color) !important;
+        }
+        
+        .theme-dark input:focus,
+        .theme-dark select:focus,
+        .theme-dark textarea:focus {
+            border-color: #7c3aed !important;
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1) !important;
+        }
+        
+        /* Styles pour les boutons */
+        .theme-dark button {
+            background-color: var(--bg-tertiary) !important;
+            color: var(--text-primary) !important;
+            border-color: var(--border-color) !important;
+        }
+        
+        .theme-dark button:hover {
+            background-color: var(--bg-secondary) !important;
+        }
+        
+        /* Styles pour les cartes et conteneurs */
+        .theme-dark .shadow-sm {
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3) !important;
+        }
+        
+        .theme-dark .shadow-lg {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2) !important;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
     <!-- Sidebar -->
     <div class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg sidebar-transition" id="sidebar">
-        <div class="flex items-center justify-center h-16 bg-gradient-to-r from-orange-600 to-red-600">
+        <div class="flex items-center justify-center h-16 bg-gradient-to-r from-purple-600 to-pink-600">
             <i class="fas fa-share-alt text-white text-2xl mr-3"></i>
             <h1 class="text-white text-xl font-bold">SocialFlow</h1>
         </div>
@@ -229,7 +355,7 @@ try {
         <nav class="mt-8">
             <div class="px-4 mb-4">
                 <div class="flex items-center">
-                    <div class="w-10 h-10 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center">
+                    <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
                         <span class="text-white font-semibold"><?php echo $admin ? strtoupper(substr($admin['first_name'], 0, 1)) : 'A'; ?></span>
                     </div>
                     <div class="ml-3">
@@ -268,8 +394,8 @@ try {
                     <i class="fas fa-chart-bar mr-3"></i>
                     Analytics
                 </a>
-                <a href="settings.php" class="flex items-center px-4 py-2 text-sm font-medium text-white bg-orange-100 rounded-lg">
-                    <i class="fas fa-cog mr-3 text-orange-600"></i>
+                <a href="settings.php" class="flex items-center px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-purple-100 to-pink-100 rounded-lg">
+                    <i class="fas fa-cog mr-3 text-purple-600"></i>
                     Paramètres
                 </a>
             </div>
@@ -330,13 +456,13 @@ try {
                                 <label for="first_name" class="block text-sm font-medium text-gray-700 mb-2">Prénom</label>
                                 <input type="text" id="first_name" name="first_name" required
                                        value="<?php echo htmlspecialchars($admin['first_name'] ?? ''); ?>"
-                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             </div>
                             <div>
                                 <label for="last_name" class="block text-sm font-medium text-gray-700 mb-2">Nom</label>
                                 <input type="text" id="last_name" name="last_name" required
                                        value="<?php echo htmlspecialchars($admin['last_name'] ?? ''); ?>"
-                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             </div>
                         </div>
                         
@@ -344,17 +470,17 @@ try {
                             <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
                             <input type="email" id="email" name="email" required
                                    value="<?php echo htmlspecialchars($admin['email'] ?? ''); ?>"
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                         </div>
                         
                         <div class="mb-6">
                             <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Téléphone</label>
                             <input type="tel" id="phone" name="phone"
                                    value="<?php echo htmlspecialchars($admin['phone'] ?? ''); ?>"
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                         </div>
                         
-                        <button type="submit" class="w-full bg-orange-600 text-white py-2 rounded-lg hover:bg-orange-700 transition duration-300">
+                        <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300">
                             <i class="fas fa-save mr-2"></i>Mettre à jour le profil
                         </button>
                     </form>
@@ -369,22 +495,22 @@ try {
                         <div class="mb-4">
                             <label for="current_password" class="block text-sm font-medium text-gray-700 mb-2">Mot de passe actuel</label>
                             <input type="password" id="current_password" name="current_password" required
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                         </div>
                         
                         <div class="mb-4">
                             <label for="new_password" class="block text-sm font-medium text-gray-700 mb-2">Nouveau mot de passe</label>
                             <input type="password" id="new_password" name="new_password" required minlength="8"
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                         </div>
                         
                         <div class="mb-6">
                             <label for="confirm_password" class="block text-sm font-medium text-gray-700 mb-2">Confirmer le mot de passe</label>
                             <input type="password" id="confirm_password" name="confirm_password" required minlength="8"
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                         </div>
                         
-                        <button type="submit" class="w-full bg-orange-600 text-white py-2 rounded-lg hover:bg-orange-700 transition duration-300">
+                        <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300">
                             <i class="fas fa-key mr-2"></i>Changer le mot de passe
                         </button>
                     </form>
@@ -402,27 +528,27 @@ try {
                             <label for="app_name" class="block text-sm font-medium text-gray-700 mb-2">Nom de l'application</label>
                             <input type="text" id="app_name" name="app_name" 
                                    value="SocialFlow"
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                         </div>
                         
                         <div class="mb-4">
                             <label for="app_email" class="block text-sm font-medium text-gray-700 mb-2">Email de l'application</label>
                             <input type="email" id="app_email" name="app_email" 
                                    value="contact@socialflow.com"
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                         </div>
                         
                         <div class="mb-4">
                             <label for="app_phone" class="block text-sm font-medium text-gray-700 mb-2">Téléphone de l'application</label>
                             <input type="tel" id="app_phone" name="app_phone" 
                                    value="+237 6XX XX XX XX"
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                         </div>
                         
                         <div class="mb-4">
                             <label for="currency" class="block text-sm font-medium text-gray-700 mb-2">Devise</label>
                             <select id="currency" name="currency" 
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                                 <option value="FCFA" selected>FCFA</option>
                                 <option value="EUR">EUR</option>
                                 <option value="USD">USD</option>
@@ -434,17 +560,17 @@ try {
                                 <label for="monthly_price" class="block text-sm font-medium text-gray-700 mb-2">Prix mensuel</label>
                                 <input type="number" id="monthly_price" name="monthly_price" min="0" step="100"
                                        value="25000"
-                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             </div>
                             <div>
                                 <label for="yearly_price" class="block text-sm font-medium text-gray-700 mb-2">Prix annuel</label>
                                 <input type="number" id="yearly_price" name="yearly_price" min="0" step="100"
                                        value="300000"
-                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             </div>
                         </div>
                         
-                        <button type="submit" class="w-full bg-orange-600 text-white py-2 rounded-lg hover:bg-orange-700 transition duration-300">
+                        <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300">
                             <i class="fas fa-cog mr-2"></i>Mettre à jour les paramètres
                         </button>
                     </form>
@@ -466,7 +592,7 @@ try {
                                     <input type="checkbox" name="email_notifications"
                                            <?php echo (isset($admin['email_notifications']) && $admin['email_notifications']) ? 'checked' : ''; ?>
                                            class="sr-only peer">
-                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
+                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r from-purple-600 to-pink-600"></div>
                                 </label>
                             </div>
                             
@@ -479,7 +605,7 @@ try {
                                     <input type="checkbox" name="push_notifications"
                                            <?php echo (isset($admin['push_notifications']) && $admin['push_notifications']) ? 'checked' : ''; ?>
                                            class="sr-only peer">
-                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
+                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r from-purple-600 to-pink-600"></div>
                                 </label>
                             </div>
                             
@@ -492,15 +618,66 @@ try {
                                     <input type="checkbox" name="sms_notifications"
                                            <?php echo (isset($admin['sms_notifications']) && $admin['sms_notifications']) ? 'checked' : ''; ?>
                                            class="sr-only peer">
-                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
+                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r from-purple-600 to-pink-600"></div>
                                 </label>
                             </div>
                         </div>
                         
-                        <button type="submit" class="w-full mt-6 bg-orange-600 text-white py-2 rounded-lg hover:bg-orange-700 transition duration-300">
+                        <button type="submit" class="w-full mt-6 bg-gradient-to-r from-purple-600 to-pink-600 text-white py-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300">
                             <i class="fas fa-bell mr-2"></i>Mettre à jour les notifications
                         </button>
                     </form>
+                </div>
+            </div>
+
+            <!-- Préférences d'affichage -->
+            <div class="mt-6">
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6">Préférences d'affichage</h2>
+                    
+                    <div class="space-y-6">
+                        <!-- Langue -->
+                        <div>
+                            <label for="language" class="block text-sm font-medium text-gray-700 mb-2">Langue</label>
+                            <select id="language" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                <option value="fr">Français</option>
+                                <option value="en">English</option>
+                                <option value="es">Español</option>
+                            </select>
+                            <p class="text-xs text-gray-500 mt-1">Choisissez votre langue préférée pour l'interface</p>
+                        </div>
+                        
+                        <!-- Mode d'éclairage -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Mode d'éclairage</label>
+                            <div class="space-y-3">
+                                <label class="flex items-center">
+                                    <input type="radio" name="theme_mode" value="light" class="mr-3 text-purple-600 focus:ring-purple-500">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-sun text-yellow-500 mr-2"></i>
+                                        <span class="text-sm text-gray-700">Mode clair</span>
+                                    </div>
+                                </label>
+                                
+                                <label class="flex items-center">
+                                    <input type="radio" name="theme_mode" value="dark" class="mr-3 text-purple-600 focus:ring-purple-500">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-moon text-indigo-500 mr-2"></i>
+                                        <span class="text-sm text-gray-700">Mode sombre</span>
+                                    </div>
+                                </label>
+                                
+                                <label class="flex items-center">
+                                    <input type="radio" name="theme_mode" value="auto" class="mr-3 text-purple-600 focus:ring-purple-500">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-adjust text-gray-500 mr-2"></i>
+                                        <span class="text-sm text-gray-700">Automatique (suit les préférences système)</span>
+                                    </div>
+                                </label>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">Choisissez le mode d'éclairage qui vous convient le mieux</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -564,6 +741,103 @@ try {
                 }, 500);
             });
         }, 5000);
+
+        // Gestion des préférences d'affichage
+        class DisplayPreferences {
+            constructor() {
+                this.init();
+            }
+
+            init() {
+                this.loadPreferences();
+                this.bindEvents();
+                this.applyTheme();
+            }
+
+            loadPreferences() {
+                // Charger les préférences depuis localStorage
+                const savedLanguage = localStorage.getItem('user_language') || 'fr';
+                const savedTheme = localStorage.getItem('user_theme') || 'light';
+
+                // Appliquer les valeurs aux contrôles
+                const languageSelect = document.getElementById('language');
+                const themeRadios = document.querySelectorAll('input[name="theme_mode"]');
+
+                if (languageSelect) {
+                    languageSelect.value = savedLanguage;
+                }
+
+                themeRadios.forEach(radio => {
+                    if (radio.value === savedTheme) {
+                        radio.checked = true;
+                    }
+                });
+            }
+
+            bindEvents() {
+                // Événement pour la langue
+                const languageSelect = document.getElementById('language');
+                if (languageSelect) {
+                    languageSelect.addEventListener('change', (e) => {
+                        localStorage.setItem('user_language', e.target.value);
+                        this.showNotification('Langue mise à jour !');
+                    });
+                }
+
+                // Événements pour le thème
+                const themeRadios = document.querySelectorAll('input[name="theme_mode"]');
+                themeRadios.forEach(radio => {
+                    radio.addEventListener('change', (e) => {
+                        localStorage.setItem('user_theme', e.target.value);
+                        this.applyTheme();
+                        this.showNotification('Mode d\'éclairage mis à jour !');
+                    });
+                });
+            }
+
+            applyTheme() {
+                const theme = localStorage.getItem('user_theme') || 'light';
+                const body = document.body;
+                const html = document.documentElement;
+
+                // Supprimer les classes de thème existantes
+                body.classList.remove('theme-light', 'theme-dark');
+                html.classList.remove('theme-light', 'theme-dark');
+
+                let actualTheme = theme;
+                if (theme === 'auto') {
+                    // Détecter la préférence système
+                    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    actualTheme = prefersDark ? 'dark' : 'light';
+                }
+
+                // Appliquer la classe au body et html
+                body.classList.add(`theme-${actualTheme}`);
+                html.classList.add(`theme-${actualTheme}`);
+                
+                // Forcer le re-rendu
+                body.style.display = 'none';
+                body.offsetHeight; // Trigger reflow
+                body.style.display = '';
+                
+                console.log(`Thème appliqué: ${actualTheme}`);
+            }
+
+            showNotification(message) {
+                // Créer une notification temporaire
+                const notification = document.createElement('div');
+                notification.className = 'fixed top-4 right-4 bg-purple-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+                notification.textContent = message;
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            }
+        }
+
+        // Initialiser les préférences d'affichage
+        new DisplayPreferences();
     </script>
 </body>
 </html>

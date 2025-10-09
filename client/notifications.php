@@ -69,12 +69,19 @@ $unread_count = count_unread_notifications($user_id);
             border-left: 4px solid #3b82f6;
             background-color: #eff6ff;
         }
+        .bg-blue-25 {
+            background-color: #f0f8ff;
+        }
+        .content-card {
+            background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+            border: 1px solid #b3d9ff;
+        }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-blue-25">
     <!-- Sidebar -->
     <div class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg sidebar-transition" id="sidebar">
-        <div class="flex items-center justify-center h-16 bg-gradient-to-r from-purple-600 to-blue-600">
+        <div class="flex items-center justify-center h-16 bg-gradient-to-r from-blue-800 to-blue-900">
             <i class="fas fa-share-alt text-white text-2xl mr-3"></i>
             <h1 class="text-white text-xl font-bold">SocialFlow</h1>
         </div>
@@ -82,7 +89,7 @@ $unread_count = count_unread_notifications($user_id);
         <nav class="mt-8">
             <div class="px-4 mb-4">
                 <div class="flex items-center">
-                    <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
+                    <div class="w-10 h-10 bg-gradient-to-r from-blue-700 to-blue-800 rounded-full flex items-center justify-center">
                         <span class="text-white font-semibold"><?php echo strtoupper(substr($_SESSION['user_name'], 0, 1)); ?></span>
                     </div>
                     <div class="ml-3">
@@ -109,8 +116,8 @@ $unread_count = count_unread_notifications($user_id);
                     <i class="fas fa-credit-card mr-3"></i>
                     Abonnement
                 </a>
-                <a href="notifications.php" class="flex items-center px-4 py-2 text-sm font-medium text-white bg-purple-100 rounded-lg">
-                    <i class="fas fa-bell mr-3 text-purple-600"></i>
+                <a href="notifications.php" class="flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-100 rounded-lg">
+                    <i class="fas fa-bell mr-3 text-blue-800"></i>
                     Notifications
                     <?php if ($unread_count > 0): ?>
                         <span class="ml-auto bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
@@ -166,7 +173,7 @@ $unread_count = count_unread_notifications($user_id);
             
             <!-- Actions en masse -->
             <?php if (!empty($notifications)): ?>
-                <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+                <div class="content-card rounded-lg shadow-sm p-4 mb-6">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-4">
                             <span class="text-sm text-gray-600">
@@ -187,7 +194,7 @@ $unread_count = count_unread_notifications($user_id);
             <?php endif; ?>
 
             <!-- Liste des notifications -->
-            <div class="bg-white rounded-lg shadow-sm">
+            <div class="content-card rounded-lg shadow-sm">
                 <?php if (!empty($notifications)): ?>
                     <div class="divide-y divide-gray-200">
                         <?php foreach ($notifications as $notification): ?>

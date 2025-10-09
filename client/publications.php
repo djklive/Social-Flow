@@ -108,12 +108,19 @@ try {
         .post-card:hover {
             background-color: #f8fafc;
         }
+        .bg-blue-25 {
+            background-color: #f0f8ff;
+        }
+        .content-card {
+            background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+            border: 1px solid #b3d9ff;
+        }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-blue-25">
     <!-- Sidebar -->
     <div class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg sidebar-transition" id="sidebar">
-        <div class="flex items-center justify-center h-16 bg-gradient-to-r from-purple-600 to-blue-600">
+        <div class="flex items-center justify-center h-16 bg-gradient-to-r from-blue-800 to-blue-900">
             <i class="fas fa-share-alt text-white text-2xl mr-3"></i>
             <h1 class="text-white text-xl font-bold">SocialFlow</h1>
         </div>
@@ -121,7 +128,7 @@ try {
         <nav class="mt-8">
             <div class="px-4 mb-4">
                 <div class="flex items-center">
-                    <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
+                    <div class="w-10 h-10 bg-gradient-to-r from-blue-700 to-blue-800 rounded-full flex items-center justify-center">
                         <span class="text-white font-semibold"><?php echo strtoupper(substr($client['first_name'], 0, 1)); ?></span>
                     </div>
                     <div class="ml-3">
@@ -136,8 +143,8 @@ try {
                     <i class="fas fa-tachometer-alt mr-3"></i>
                     Dashboard
                 </a>
-                <a href="publications.php" class="flex items-center px-4 py-2 text-sm font-medium text-white bg-purple-100 rounded-lg">
-                    <i class="fas fa-newspaper mr-3 text-purple-600"></i>
+                <a href="publications.php" class="flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-100 rounded-lg">
+                    <i class="fas fa-newspaper mr-3 text-blue-800"></i>
                     Mes Publications
                 </a>
                 <a href="statistics.php" class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg">
@@ -203,7 +210,7 @@ try {
             
             <!-- Statistiques -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
-                <div class="bg-white rounded-lg shadow-sm p-6 card-hover">
+                <div class="content-card rounded-lg shadow-sm p-6 card-hover">
                     <div class="flex items-center">
                         <div class="p-3 rounded-full bg-blue-100">
                             <i class="fas fa-newspaper text-blue-600 text-xl"></i>
@@ -215,7 +222,7 @@ try {
                     </div>
                 </div>
                 
-                <div class="bg-white rounded-lg shadow-sm p-6 card-hover">
+                <div class="content-card rounded-lg shadow-sm p-6 card-hover">
                     <div class="flex items-center">
                         <div class="p-3 rounded-full bg-green-100">
                             <i class="fas fa-check-circle text-green-600 text-xl"></i>
@@ -227,7 +234,7 @@ try {
                     </div>
                 </div>
                 
-                <div class="bg-white rounded-lg shadow-sm p-6 card-hover">
+                <div class="content-card rounded-lg shadow-sm p-6 card-hover">
                     <div class="flex items-center">
                         <div class="p-3 rounded-full bg-yellow-100">
                             <i class="fas fa-clock text-yellow-600 text-xl"></i>
@@ -239,7 +246,7 @@ try {
                     </div>
                 </div>
                 
-                <div class="bg-white rounded-lg shadow-sm p-6 card-hover">
+                <div class="content-card rounded-lg shadow-sm p-6 card-hover">
                     <div class="flex items-center">
                         <div class="p-3 rounded-full bg-gray-100">
                             <i class="fas fa-edit text-gray-600 text-xl"></i>
@@ -251,7 +258,7 @@ try {
                     </div>
                 </div>
                 
-                <div class="bg-white rounded-lg shadow-sm p-6 card-hover">
+                <div class="content-card rounded-lg shadow-sm p-6 card-hover">
                     <div class="flex items-center">
                         <div class="p-3 rounded-full bg-red-100">
                             <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
@@ -265,7 +272,7 @@ try {
             </div>
 
             <!-- Filtres -->
-            <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <div class="content-card rounded-lg shadow-sm p-6 mb-6">
                 <form method="GET" class="flex flex-wrap items-center gap-4">
                     <div class="flex-1 min-w-64">
                         <input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>" 
@@ -294,7 +301,7 @@ try {
                         </select>
                     </div>
                     
-                    <button type="submit" class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition duration-300">
+                    <button type="submit" class="bg-blue-800 text-white px-6 py-2 rounded-lg hover:bg-blue-900 transition duration-300">
                         <i class="fas fa-filter mr-2"></i>Filtrer
                     </button>
                     

@@ -1,0 +1,32 @@
+{
+    "name": "socialflow/socialflow",
+    "description": "Plateforme de gestion de réseaux sociaux",
+    "type": "project",
+    "require": {
+        "php": ">=7.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "SocialFlow\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SocialFlow\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "test-unit": "phpunit tests/unit",
+        "test-integration": "phpunit tests/integration",
+        "test-functional": "phpunit tests/functional",
+        "test-coverage": "phpunit --coverage-html tests/coverage"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    }
+}

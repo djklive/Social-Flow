@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 if ($client_id > 0 && !empty($plan_type) && $price > 0 && !empty($start_date) && !empty($end_date)) {
                     // Vérifier si l'utilisateur a déjà un abonnement actif
-                    $stmt = $db->prepare("SELECT id FROM subscriptions WHERE user_id = ? AND status = 'active'");
+                    $stmt = $db->prepare("SELECT id FROM subscriptions WHERE client_id = ? AND status = 'active'");
                     $stmt->execute([$client_id]);
                     if ($stmt->fetch()) {
                         $error_message = 'Cet utilisateur a déjà un abonnement actif.';
@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                     
                     // Créer l'abonnement
-                    $stmt = $db->prepare("INSERT INTO subscriptions (user_id, plan_type, price, start_date, end_date, status, created_at) VALUES (?, ?, ?, ?, ?, 'active', NOW())");
+                    $stmt = $db->prepare("INSERT INTO subscriptions (client_id, plan_type, price, start_date, end_date, status, created_at) VALUES (?, ?, ?, ?, ?, 'active', NOW())");
                     $stmt->execute([$client_id, $plan_type, $price, $start_date, $end_date]);
                     
                     // Logger l'activité
@@ -145,7 +145,7 @@ try {
                (SELECT COUNT(*) FROM payments WHERE subscription_id = s.id) as payment_count,
                (SELECT SUM(amount) FROM payments WHERE subscription_id = s.id AND status = 'completed') as total_paid
         FROM subscriptions s
-        INNER JOIN users u ON s.user_id = u.id
+        INNER JOIN users u ON s.client_id = u.id
         WHERE $where_clause
         ORDER BY s.created_at DESC
     ");
@@ -156,7 +156,7 @@ try {
     $stmt = $db->prepare("
         SELECT u.* FROM users u 
         WHERE u.role = 'client' AND u.status = 'active'
-        AND u.id NOT IN (SELECT user_id FROM subscriptions WHERE status = 'active')
+        AND u.id NOT IN (SELECT client_id FROM subscriptions WHERE status = 'active')
         ORDER BY u.first_name, u.last_name
     ");
     $stmt->execute();
@@ -222,7 +222,7 @@ try {
 <body class="bg-gray-50">
     <!-- Sidebar -->
     <div class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg sidebar-transition" id="sidebar">
-        <div class="flex items-center justify-center h-16 bg-gradient-to-r from-orange-600 to-red-600">
+        <div class="flex items-center justify-center h-16 bg-gradient-to-r from-purple-600 to-pink-600">
             <i class="fas fa-share-alt text-white text-2xl mr-3"></i>
             <h1 class="text-white text-xl font-bold">SocialFlow</h1>
         </div>
@@ -230,7 +230,7 @@ try {
         <nav class="mt-8">
             <div class="px-4 mb-4">
                 <div class="flex items-center">
-                    <div class="w-10 h-10 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center">
+                    <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
                         <span class="text-white font-semibold"><?php echo $admin ? strtoupper(substr($admin['first_name'], 0, 1)) : 'A'; ?></span>
                     </div>
                     <div class="ml-3">
@@ -257,8 +257,8 @@ try {
                     <i class="fas fa-newspaper mr-3"></i>
                     Publications
                 </a>
-                <a href="subscriptions.php" class="flex items-center px-4 py-2 text-sm font-medium text-white bg-orange-100 rounded-lg">
-                    <i class="fas fa-credit-card mr-3 text-orange-600"></i>
+                <a href="subscriptions.php" class="flex items-center px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-purple-100 to-pink-100 rounded-lg">
+                    <i class="fas fa-credit-card mr-3 text-purple-600"></i>
                     Abonnements
                 </a>
                 <a href="payments.php" class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg">
@@ -294,7 +294,7 @@ try {
                     <p class="text-sm text-gray-600">Gérez tous les abonnements du système</p>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <button onclick="openCreateSubscriptionModal()" class="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition duration-300">
+                    <button onclick="openCreateSubscriptionModal()" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300">
                         <i class="fas fa-plus mr-2"></i>Nouvel Abonnement
                     </button>
                     <button class="p-2 text-gray-400 hover:text-gray-600">
@@ -410,8 +410,8 @@ try {
                 
                 <div class="bg-white rounded-lg shadow-sm p-6 card-hover">
                     <div class="flex items-center">
-                        <div class="p-3 rounded-full bg-yellow-100">
-                            <i class="fas fa-chart-line text-yellow-600 text-xl"></i>
+                        <div class="p-3 rounded-full bg-gradient-to-r from-blue-100 to-cyan-100">
+                            <i class="fas fa-chart-line text-blue-600 text-xl"></i>
                         </div>
                         <div class="ml-4">
                             <p class="text-sm font-medium text-gray-600">Moyenne</p>
@@ -427,11 +427,11 @@ try {
                     <div class="flex-1 min-w-64">
                         <input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>" 
                                placeholder="Rechercher par nom ou email..." 
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                     </div>
                     
                     <div>
-                        <select name="status" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                        <select name="status" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             <option value="all" <?php echo $status_filter === 'all' ? 'selected' : ''; ?>>Tous les statuts</option>
                             <option value="active" <?php echo $status_filter === 'active' ? 'selected' : ''; ?>>Actif</option>
                             <option value="expired" <?php echo $status_filter === 'expired' ? 'selected' : ''; ?>>Expiré</option>
@@ -440,14 +440,14 @@ try {
                     </div>
                     
                     <div>
-                        <select name="plan_type" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                        <select name="plan_type" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             <option value="all" <?php echo $plan_filter === 'all' ? 'selected' : ''; ?>>Tous les plans</option>
                             <option value="monthly" <?php echo $plan_filter === 'monthly' ? 'selected' : ''; ?>>Mensuel</option>
                             <option value="yearly" <?php echo $plan_filter === 'yearly' ? 'selected' : ''; ?>>Annuel</option>
                         </select>
                     </div>
                     
-                    <button type="submit" class="bg-orange-600 text-white px-6 py-2 rounded-lg hover:bg-orange-700 transition duration-300">
+                    <button type="submit" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300">
                         <i class="fas fa-filter mr-2"></i>Filtrer
                     </button>
                     
@@ -543,7 +543,7 @@ try {
                                                     <form method="POST" class="inline" onsubmit="return confirm('Annuler cet abonnement ?')">
                                                         <input type="hidden" name="action" value="cancel_subscription">
                                                         <input type="hidden" name="subscription_id" value="<?php echo $subscription['id']; ?>">
-                                                        <button type="submit" class="text-yellow-600 hover:text-yellow-700" title="Annuler">
+                                                        <button type="submit" class="text-blue-600 hover:text-yellow-700" title="Annuler">
                                                             <i class="fas fa-ban"></i>
                                                         </button>
                                                     </form>
@@ -573,7 +573,7 @@ try {
                                 Aucun abonnement dans le système.
                             <?php endif; ?>
                         </p>
-                        <button onclick="openCreateSubscriptionModal()" class="mt-4 inline-block bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition duration-300">
+                        <button onclick="openCreateSubscriptionModal()" class="mt-4 inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300">
                             <i class="fas fa-plus mr-2"></i>Créer un abonnement
                         </button>
                     </div>
@@ -594,7 +594,7 @@ try {
                         <div class="mb-4">
                             <label for="client_id" class="block text-sm font-medium text-gray-700 mb-2">Client</label>
                             <select id="client_id" name="client_id" required
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                                 <option value="">Sélectionner un client</option>
                                 <?php foreach ($available_clients as $client): ?>
                                     <option value="<?php echo $client['id']; ?>">
@@ -607,7 +607,7 @@ try {
                         <div class="mb-4">
                             <label for="plan_type" class="block text-sm font-medium text-gray-700 mb-2">Type de plan</label>
                             <select id="plan_type" name="plan_type" required
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                                 <option value="">Sélectionner un plan</option>
                                 <option value="monthly">Mensuel</option>
                                 <option value="yearly">Annuel</option>
@@ -617,19 +617,19 @@ try {
                         <div class="mb-4">
                             <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Prix (FCFA)</label>
                             <input type="number" id="price" name="price" required min="0" step="100"
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                         </div>
                         
                         <div class="grid grid-cols-2 gap-4 mb-6">
                             <div>
                                 <label for="start_date" class="block text-sm font-medium text-gray-700 mb-2">Date de début</label>
                                 <input type="date" id="start_date" name="start_date" required
-                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             </div>
                             <div>
                                 <label for="end_date" class="block text-sm font-medium text-gray-700 mb-2">Date de fin</label>
                                 <input type="date" id="end_date" name="end_date" required
-                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             </div>
                         </div>
                         
@@ -638,7 +638,7 @@ try {
                                     class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition duration-300">
                                 Annuler
                             </button>
-                            <button type="submit" class="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition duration-300">
+                            <button type="submit" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300">
                                 <i class="fas fa-plus mr-2"></i>Créer
                             </button>
                         </div>
@@ -668,7 +668,7 @@ try {
                         <div class="mb-4">
                             <label for="edit_plan_type" class="block text-sm font-medium text-gray-700 mb-2">Type de plan</label>
                             <select id="edit_plan_type" name="plan_type" required
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                                 <option value="monthly">Mensuel</option>
                                 <option value="yearly">Annuel</option>
                             </select>
@@ -677,26 +677,26 @@ try {
                         <div class="mb-4">
                             <label for="edit_price" class="block text-sm font-medium text-gray-700 mb-2">Prix (FCFA)</label>
                             <input type="number" id="edit_price" name="price" required min="0" step="100"
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                         </div>
                         
                         <div class="grid grid-cols-2 gap-4 mb-4">
                             <div>
                                 <label for="edit_start_date" class="block text-sm font-medium text-gray-700 mb-2">Date de début</label>
                                 <input type="date" id="edit_start_date" name="start_date" required
-                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             </div>
                             <div>
                                 <label for="edit_end_date" class="block text-sm font-medium text-gray-700 mb-2">Date de fin</label>
                                 <input type="date" id="edit_end_date" name="end_date" required
-                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                             </div>
                         </div>
                         
                         <div class="mb-6">
                             <label for="edit_status" class="block text-sm font-medium text-gray-700 mb-2">Statut</label>
                             <select id="edit_status" name="status"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
                                 <option value="active">Actif</option>
                                 <option value="expired">Expiré</option>
                                 <option value="cancelled">Annulé</option>
@@ -708,7 +708,7 @@ try {
                                     class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition duration-300">
                                 Annuler
                             </button>
-                            <button type="submit" class="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition duration-300">
+                            <button type="submit" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition duration-300">
                                 <i class="fas fa-save mr-2"></i>Modifier
                             </button>
                         </div>

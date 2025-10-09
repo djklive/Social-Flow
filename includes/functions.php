@@ -45,6 +45,11 @@ function validate_phone($phone) {
         return true; // Format français
     }
     
+    // Format camerounais spécifique
+    if (preg_match('/^(\+237|0)[6-9](\d{8})$/', $phone)) {
+        return true; // Format camerounais
+    }
+    
     return false;
 }
 
@@ -265,5 +270,22 @@ function log_activity($user_id, $action, $details = '') {
     } catch (Exception $e) {
         error_log("Erreur lors de l'enregistrement de l'activité: " . $e->getMessage());
     }
+}
+
+/**
+ * Simule un paiement (toujours réussi pour les tests)
+ */
+function simulate_payment($method, $amount, $reference) {
+    // Simulation : Toujours réussi pour les tests
+    // Dans un environnement de production, ceci ferait appel à une vraie API de paiement
+    
+    // Log de la simulation
+    error_log("Simulation de paiement - Méthode: $method, Montant: $amount, Référence: $reference");
+    
+    // Simuler un délai de traitement
+    sleep(1);
+    
+    // Retourner toujours true pour simuler un paiement réussi
+    return true;
 }
 ?>

@@ -1,0 +1,7 @@
+Database Integration (SocialFlow\Tests\Integration\DatabaseIntegration)
+ [x] Database connection
+ [x] User creation
+ [x] User authentication
+ [x] Email uniqueness constraint
+ [x] Role validation
+

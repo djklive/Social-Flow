@@ -66,15 +66,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $error_message = 'Le nouveau mot de passe doit contenir au moins 6 caractères.';
                 } else {
                     // Vérifier le mot de passe actuel
-                    $stmt = $db->prepare("SELECT password FROM users WHERE id = ?");
+                    $stmt = $db->prepare("SELECT password_hash FROM users WHERE id = ?");
                     $stmt->execute([$user_id]);
                     $user = $stmt->fetch();
                     
-                    if (!verify_password($current_password, $user['password'])) {
+                    if (!password_verify($current_password, $user['password_hash'])) {
                         $error_message = 'Mot de passe actuel incorrect.';
                     } else {
                         $hashed_password = hash_password($new_password);
-                        $stmt = $db->prepare("UPDATE users SET password = ? WHERE id = ?");
+                        $stmt = $db->prepare("UPDATE users SET password_hash = ? WHERE id = ?");
                         $stmt->execute([$hashed_password, $user_id]);
                         
                         // Logger l'activité
@@ -162,12 +162,169 @@ try {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
         }
+        .bg-blue-25 {
+            background-color: #f0f8ff;
+        }
+        .content-card {
+            background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+            border: 1px solid #b3d9ff;
+        }
+        
+        /* Styles pour le mode sombre */
+        .theme-dark {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: #475569;
+            --sidebar-bg: #1e293b;
+            --card-bg: #334155;
+        }
+        
+        /* Application globale du mode sombre */
+        .theme-dark,
+        .theme-dark * {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+        
+        .theme-dark body {
+            background-color: var(--bg-primary) !important;
+            color: var(--text-primary) !important;
+        }
+        
+        .theme-dark .bg-blue-25 {
+            background-color: var(--bg-primary) !important;
+        }
+        
+        .theme-dark .bg-white {
+            background-color: var(--card-bg) !important;
+            color: var(--text-primary) !important;
+        }
+        
+        .theme-dark .bg-blue-100 {
+            background-color: var(--sidebar-bg) !important;
+        }
+        
+        .theme-dark .bg-blue-200 {
+            background-color: var(--bg-tertiary) !important;
+        }
+        
+        .theme-dark .bg-blue-600 {
+            background-color: #3b82f6 !important;
+        }
+        
+        .theme-dark .bg-blue-800 {
+            background-color: #1e40af !important;
+        }
+        
+        .theme-dark .bg-blue-900 {
+            background-color: #1e3a8a !important;
+        }
+        
+        .theme-dark .text-gray-900 {
+            color: var(--text-primary) !important;
+        }
+        
+        .theme-dark .text-gray-700 {
+            color: var(--text-secondary) !important;
+        }
+        
+        .theme-dark .text-gray-500 {
+            color: var(--text-muted) !important;
+        }
+        
+        .theme-dark .text-blue-800 {
+            color: var(--text-primary) !important;
+        }
+        
+        .theme-dark .text-blue-700 {
+            color: var(--text-secondary) !important;
+        }
+        
+        .theme-dark .text-blue-900 {
+            color: var(--text-primary) !important;
+        }
+        
+        .theme-dark .border-gray-300 {
+            border-color: var(--border-color) !important;
+        }
+        
+        .theme-dark .border-blue-300 {
+            border-color: var(--border-color) !important;
+        }
+        
+        .theme-dark .hover\\:bg-blue-200:hover {
+            background-color: var(--bg-tertiary) !important;
+        }
+        
+        .theme-dark .hover\\:bg-blue-900:hover {
+            background-color: #1e3a8a !important;
+        }
+        
+        .theme-dark .from-blue-500 {
+            --tw-gradient-from: #3b82f6 !important;
+        }
+        
+        .theme-dark .to-blue-600 {
+            --tw-gradient-to: #2563eb !important;
+        }
+        
+        .theme-dark .from-blue-800 {
+            --tw-gradient-from: #1e40af !important;
+        }
+        
+        .theme-dark .to-blue-900 {
+            --tw-gradient-to: #1e3a8a !important;
+        }
+        
+        .theme-dark .content-card {
+            background: linear-gradient(135deg, var(--card-bg) 0%, var(--bg-tertiary) 100%) !important;
+            border: 1px solid var(--border-color) !important;
+        }
+        
+        /* Styles spécifiques pour les éléments de formulaire */
+        .theme-dark input,
+        .theme-dark select,
+        .theme-dark textarea {
+            background-color: var(--bg-secondary) !important;
+            color: var(--text-primary) !important;
+            border-color: var(--border-color) !important;
+        }
+        
+        .theme-dark input:focus,
+        .theme-dark select:focus,
+        .theme-dark textarea:focus {
+            border-color: #3b82f6 !important;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+        }
+        
+        /* Styles pour les boutons */
+        .theme-dark button {
+            background-color: var(--bg-tertiary) !important;
+            color: var(--text-primary) !important;
+            border-color: var(--border-color) !important;
+        }
+        
+        .theme-dark button:hover {
+            background-color: var(--bg-secondary) !important;
+        }
+        
+        /* Styles pour les cartes et conteneurs */
+        .theme-dark .shadow-sm {
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3) !important;
+        }
+        
+        .theme-dark .shadow-lg {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2) !important;
+        }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-blue-25">
     <!-- Sidebar -->
     <div class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg sidebar-transition" id="sidebar">
-        <div class="flex items-center justify-center h-16 bg-gradient-to-r from-purple-600 to-blue-600">
+        <div class="flex items-center justify-center h-16 bg-gradient-to-r from-blue-800 to-blue-900">
             <i class="fas fa-share-alt text-white text-2xl mr-3"></i>
             <h1 class="text-white text-xl font-bold">SocialFlow</h1>
         </div>
@@ -175,7 +332,7 @@ try {
         <nav class="mt-8">
             <div class="px-4 mb-4">
                 <div class="flex items-center">
-                    <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
+                    <div class="w-10 h-10 bg-gradient-to-r from-blue-700 to-blue-800 rounded-full flex items-center justify-center">
                         <span class="text-white font-semibold"><?php echo strtoupper(substr($client['first_name'], 0, 1)); ?></span>
                     </div>
                     <div class="ml-3">
@@ -211,8 +368,8 @@ try {
                         </span>
                     <?php endif; ?>
                 </a>
-                <a href="settings.php" class="flex items-center px-4 py-2 text-sm font-medium text-white bg-purple-100 rounded-lg">
-                    <i class="fas fa-cog mr-3 text-purple-600"></i>
+                <a href="settings.php" class="flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-100 rounded-lg">
+                    <i class="fas fa-cog mr-3 text-blue-800"></i>
                     Paramètres
                 </a>
             </div>
@@ -309,7 +466,7 @@ try {
                             </div>
                         </div>
                         
-                        <button type="submit" class="mt-6 w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition duration-300">
+                        <button type="submit" class="mt-6 w-full bg-blue-800 text-white py-2 px-4 rounded-lg hover:bg-blue-900 transition duration-300">
                             <i class="fas fa-save mr-2"></i>Mettre à jour le profil
                         </button>
                     </form>
@@ -345,7 +502,7 @@ try {
                             </div>
                         </div>
                         
-                        <button type="submit" class="mt-6 w-full bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition duration-300">
+                        <button type="submit" class="mt-6 w-full bg-blue-800 text-white py-2 px-4 rounded-lg hover:bg-blue-900 transition duration-300">
                             <i class="fas fa-key mr-2"></i>Changer le mot de passe
                         </button>
                     </form>
@@ -370,7 +527,7 @@ try {
                                     <input type="checkbox" name="email_notifications" 
                                            <?php echo (isset($client['email_notifications']) && $client['email_notifications']) ? 'checked' : ''; ?>
                                            class="sr-only peer">
-                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-800"></div>
                                 </label>
                             </div>
                             
@@ -383,7 +540,7 @@ try {
                                     <input type="checkbox" name="push_notifications" 
                                            <?php echo (isset($client['push_notifications']) && $client['push_notifications']) ? 'checked' : ''; ?>
                                            class="sr-only peer">
-                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-800"></div>
                                 </label>
                             </div>
                             
@@ -396,15 +553,66 @@ try {
                                     <input type="checkbox" name="sms_notifications" 
                                            <?php echo (isset($client['sms_notifications']) && $client['sms_notifications']) ? 'checked' : ''; ?>
                                            class="sr-only peer">
-                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-800"></div>
                                 </label>
                             </div>
                         </div>
                         
-                        <button type="submit" class="mt-6 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition duration-300">
+                        <button type="submit" class="mt-6 bg-blue-800 text-white py-2 px-4 rounded-lg hover:bg-blue-900 transition duration-300">
                             <i class="fas fa-bell mr-2"></i>Mettre à jour les notifications
                         </button>
                     </form>
+                </div>
+            </div>
+
+            <!-- Préférences d'affichage -->
+            <div class="mt-6">
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6">Préférences d'affichage</h2>
+                    
+                    <div class="space-y-6">
+                        <!-- Langue -->
+                        <div>
+                            <label for="language" class="block text-sm font-medium text-gray-700 mb-2">Langue</label>
+                            <select id="language" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="fr">Français</option>
+                                <option value="en">English</option>
+                                <option value="es">Español</option>
+                            </select>
+                            <p class="text-xs text-gray-500 mt-1">Choisissez votre langue préférée pour l'interface</p>
+                        </div>
+                        
+                        <!-- Mode d'éclairage -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Mode d'éclairage</label>
+                            <div class="space-y-3">
+                                <label class="flex items-center">
+                                    <input type="radio" name="theme_mode" value="light" class="mr-3 text-blue-600 focus:ring-blue-500">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-sun text-yellow-500 mr-2"></i>
+                                        <span class="text-sm text-gray-700">Mode clair</span>
+                                    </div>
+                                </label>
+                                
+                                <label class="flex items-center">
+                                    <input type="radio" name="theme_mode" value="dark" class="mr-3 text-blue-600 focus:ring-blue-500">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-moon text-indigo-500 mr-2"></i>
+                                        <span class="text-sm text-gray-700">Mode sombre</span>
+                                    </div>
+                                </label>
+                                
+                                <label class="flex items-center">
+                                    <input type="radio" name="theme_mode" value="auto" class="mr-3 text-blue-600 focus:ring-blue-500">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-adjust text-gray-500 mr-2"></i>
+                                        <span class="text-sm text-gray-700">Automatique (suit les préférences système)</span>
+                                    </div>
+                                </label>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">Choisissez le mode d'éclairage qui vous convient le mieux</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -445,15 +653,18 @@ try {
 
     <script>
         // Validation du formulaire de changement de mot de passe
-        document.querySelector('form[action=""]').addEventListener('submit', function(e) {
-            const newPassword = document.getElementById('new_password').value;
-            const confirmPassword = document.getElementById('confirm_password').value;
-            
-            if (newPassword !== confirmPassword) {
-                e.preventDefault();
-                alert('Les nouveaux mots de passe ne correspondent pas.');
-            }
-        });
+        const passwordForm = document.querySelector('form input[name="action"][value="change_password"]').closest('form');
+        if (passwordForm) {
+            passwordForm.addEventListener('submit', function(e) {
+                const newPassword = document.getElementById('new_password').value;
+                const confirmPassword = document.getElementById('confirm_password').value;
+                
+                if (newPassword !== confirmPassword) {
+                    e.preventDefault();
+                    alert('Les nouveaux mots de passe ne correspondent pas.');
+                }
+            });
+        }
 
         // Auto-hide flash messages
         setTimeout(function() {
@@ -466,6 +677,103 @@ try {
                 }, 500);
             });
         }, 5000);
+
+        // Gestion des préférences d'affichage
+        class DisplayPreferences {
+            constructor() {
+                this.init();
+            }
+
+            init() {
+                this.loadPreferences();
+                this.bindEvents();
+                this.applyTheme();
+            }
+
+            loadPreferences() {
+                // Charger les préférences depuis localStorage
+                const savedLanguage = localStorage.getItem('user_language') || 'fr';
+                const savedTheme = localStorage.getItem('user_theme') || 'light';
+
+                // Appliquer les valeurs aux contrôles
+                const languageSelect = document.getElementById('language');
+                const themeRadios = document.querySelectorAll('input[name="theme_mode"]');
+
+                if (languageSelect) {
+                    languageSelect.value = savedLanguage;
+                }
+
+                themeRadios.forEach(radio => {
+                    if (radio.value === savedTheme) {
+                        radio.checked = true;
+                    }
+                });
+            }
+
+            bindEvents() {
+                // Événement pour la langue
+                const languageSelect = document.getElementById('language');
+                if (languageSelect) {
+                    languageSelect.addEventListener('change', (e) => {
+                        localStorage.setItem('user_language', e.target.value);
+                        this.showNotification('Langue mise à jour !');
+                    });
+                }
+
+                // Événements pour le thème
+                const themeRadios = document.querySelectorAll('input[name="theme_mode"]');
+                themeRadios.forEach(radio => {
+                    radio.addEventListener('change', (e) => {
+                        localStorage.setItem('user_theme', e.target.value);
+                        this.applyTheme();
+                        this.showNotification('Mode d\'éclairage mis à jour !');
+                    });
+                });
+            }
+
+            applyTheme() {
+                const theme = localStorage.getItem('user_theme') || 'light';
+                const body = document.body;
+                const html = document.documentElement;
+
+                // Supprimer les classes de thème existantes
+                body.classList.remove('theme-light', 'theme-dark');
+                html.classList.remove('theme-light', 'theme-dark');
+
+                let actualTheme = theme;
+                if (theme === 'auto') {
+                    // Détecter la préférence système
+                    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    actualTheme = prefersDark ? 'dark' : 'light';
+                }
+
+                // Appliquer la classe au body et html
+                body.classList.add(`theme-${actualTheme}`);
+                html.classList.add(`theme-${actualTheme}`);
+                
+                // Forcer le re-rendu
+                body.style.display = 'none';
+                body.offsetHeight; // Trigger reflow
+                body.style.display = '';
+                
+                console.log(`Thème appliqué: ${actualTheme}`);
+            }
+
+            showNotification(message) {
+                // Créer une notification temporaire
+                const notification = document.createElement('div');
+                notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+                notification.textContent = message;
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            }
+        }
+
+        // Initialiser les préférences d'affichage
+        new DisplayPreferences();
     </script>
 </body>
 </html>

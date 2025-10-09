@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 ]);
                 
                 // Logger l'activité
-                log_activity($user_id, 'subscription_created', "Abonnement $plan_type créé - $price €");
+                log_activity($user_id, 'subscription_created', "Abonnement $plan_type créé - $price FCFA");
                 
                 $success_message = 'Votre abonnement a été activé avec succès !';
             } else {
@@ -125,11 +125,6 @@ try {
     $unread_notifications = 0;
 }
 
-// Fonction de simulation de paiement
-function simulate_payment($method, $amount, $reference) {
-    // Simulation : 90% de succès
-    return rand(1, 10) <= 9;
-}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -161,12 +156,19 @@ function simulate_payment($method, $amount, $reference) {
             border-color: #8b5cf6;
             box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
         }
+        .bg-blue-25 {
+            background-color: #f0f8ff;
+        }
+        .content-card {
+            background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+            border: 1px solid #b3d9ff;
+        }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-blue-25">
     <!-- Sidebar -->
     <div class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg sidebar-transition" id="sidebar">
-        <div class="flex items-center justify-center h-16 bg-gradient-to-r from-purple-600 to-blue-600">
+        <div class="flex items-center justify-center h-16 bg-gradient-to-r from-blue-800 to-blue-900">
             <i class="fas fa-share-alt text-white text-2xl mr-3"></i>
             <h1 class="text-white text-xl font-bold">SocialFlow</h1>
         </div>
@@ -174,7 +176,7 @@ function simulate_payment($method, $amount, $reference) {
         <nav class="mt-8">
             <div class="px-4 mb-4">
                 <div class="flex items-center">
-                    <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
+                    <div class="w-10 h-10 bg-gradient-to-r from-blue-700 to-blue-800 rounded-full flex items-center justify-center">
                         <span class="text-white font-semibold"><?php echo strtoupper(substr($_SESSION['user_name'], 0, 1)); ?></span>
                     </div>
                     <div class="ml-3">
@@ -197,8 +199,8 @@ function simulate_payment($method, $amount, $reference) {
                     <i class="fas fa-chart-bar mr-3"></i>
                     Statistiques
                 </a>
-                <a href="subscription.php" class="flex items-center px-4 py-2 text-sm font-medium text-white bg-purple-100 rounded-lg">
-                    <i class="fas fa-credit-card mr-3 text-purple-600"></i>
+                <a href="subscription.php" class="flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-100 rounded-lg">
+                    <i class="fas fa-credit-card mr-3 text-blue-800"></i>
                     Abonnement
                 </a>
                 <a href="notifications.php" class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg">
@@ -258,7 +260,7 @@ function simulate_payment($method, $amount, $reference) {
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <!-- Plans d'abonnement -->
                 <div class="lg:col-span-2">
-                    <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="content-card rounded-lg shadow-sm p-6">
                         <h2 class="text-xl font-semibold text-gray-900 mb-6">Choisissez votre plan</h2>
                         
                         <form method="POST" id="subscriptionForm">
@@ -269,7 +271,7 @@ function simulate_payment($method, $amount, $reference) {
                                 <div class="plan-card border-2 border-gray-200 rounded-lg p-6 cursor-pointer" onclick="selectPlan('monthly')">
                                     <div class="text-center">
                                         <h3 class="text-lg font-semibold text-gray-900 mb-2">Plan Mensuel</h3>
-                                        <div class="text-3xl font-bold text-purple-600 mb-4">29,99 €</div>
+                                        <div class="text-3xl font-bold text-blue-800 mb-4">25000 FCFA</div>
                                         <p class="text-gray-600 mb-4">Par mois</p>
                                         <ul class="text-sm text-gray-600 space-y-2 mb-6">
                                             <li class="flex items-center">
@@ -302,7 +304,7 @@ function simulate_payment($method, $amount, $reference) {
                                     </div>
                                     <div class="text-center">
                                         <h3 class="text-lg font-semibold text-gray-900 mb-2">Plan Annuel</h3>
-                                        <div class="text-3xl font-bold text-purple-600 mb-4">299,99 €</div>
+                                        <div class="text-3xl font-bold text-blue-800 mb-4">300000 FCFA</div>
                                         <p class="text-gray-600 mb-4">Par an</p>
                                         <ul class="text-sm text-gray-600 space-y-2 mb-6">
                                             <li class="flex items-center">
@@ -364,7 +366,7 @@ function simulate_payment($method, $amount, $reference) {
                                 </div>
                             </div>
 
-                            <button type="submit" class="w-full bg-purple-600 text-white py-3 px-4 rounded-lg hover:bg-purple-700 transition duration-300 font-semibold">
+                            <button type="submit" class="w-full bg-blue-800 text-white py-3 px-4 rounded-lg hover:bg-blue-900 transition duration-300 font-semibold">
                                 <i class="fas fa-credit-card mr-2"></i>Souscrire maintenant
                             </button>
                         </form>
@@ -374,7 +376,7 @@ function simulate_payment($method, $amount, $reference) {
                 <!-- Abonnement actuel et historique -->
                 <div class="lg:col-span-1">
                     <!-- Abonnement actuel -->
-                    <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+                    <div class="content-card rounded-lg shadow-sm p-6 mb-6">
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">Abonnement actuel</h3>
                         <?php if ($current_subscription): ?>
                             <div class="space-y-3">
@@ -385,7 +387,7 @@ function simulate_payment($method, $amount, $reference) {
                                     </span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <span class="text-gray-600">Prix:</span>
+                                    <span class="text-gray-600">Prix: </span>
                                     <span class="font-medium"><?php echo number_format($current_subscription['price']); ?> FCFA</span>
                                 </div>
                                 <div class="flex justify-between">
@@ -410,7 +412,7 @@ function simulate_payment($method, $amount, $reference) {
                     </div>
 
                     <!-- Historique des paiements -->
-                    <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="content-card rounded-lg shadow-sm p-6">
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">Historique des paiements</h3>
                         <?php if (!empty($payment_history)): ?>
                             <div class="space-y-3">
